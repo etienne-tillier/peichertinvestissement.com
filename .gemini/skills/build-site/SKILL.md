@@ -1,6 +1,6 @@
 ---
 name: build-site
-description: Construire un site web complet à partir du template niche-starter et du fichier instructions.md
+description: Construire un site web complet à partir du template niche-starter et du fichier instructions.md. Génère du code front-end distinctif et production-grade qui évite l'esthétique générique "AI slop".
 ---
 
 # 🏗️ SKILL : Construire un Site Web Complet
@@ -124,65 +124,146 @@ curl -L "URL_R2_IMAGE" -o public/images/nom-fichier.jpeg
 
 ---
 
-## 🎨 DESIGN PLAYBOOK — Design Unique Obligatoire
+## 🎨 DESIGN EXCELLENCE — Frontend Design de Haut Niveau
 
-### Phase 1 : Analyse Émotionnelle (AVANT de coder)
-1. Lire le brief dans `instructions.md`
-2. Identifier **5 adjectifs** : l'ambiance du site
-3. Identifier **3 références visuelles** : objets, lieux, textures associés
-4. Identifier **2 émotions** à évoquer chez le visiteur
+### Philosophie Fondamentale
 
-### Phase 2 : Design System Unique
-Créer une palette dans `globals.css` en CSS variables :
-- `--color-primary` : couleur principale issue de l'univers thématique
-- `--color-secondary` : couleur complémentaire
-- `--color-accent` : couleur d'accent pour CTA
-- `--color-background` : fond principal
-- `--color-foreground` : texte principal
-- `--color-muted` : texte secondaire
+Chaque site doit être une création **distinctive et mémorable**, pas un template générique. Tu es capable de créations extraordinaires — n'hésite pas, montre ce qui peut être véritablement créé en sortant des sentiers battus et en s'engageant pleinement dans une vision distinctive.
 
-**Règles de contraste ABSOLUES :**
-- Ratio minimum 4.5:1 (WCAG AA) entre texte et fond
-- Tester CHAQUE combinaison texte/fond
-- ❌ Jamais texte clair sur fond clair
-- ❌ Jamais texte foncé sur fond foncé
+**CRITIQUE** : Choisis une direction conceptuelle claire et exécute-la avec précision. Le maximalisme audacieux et le minimalisme raffiné fonctionnent tous les deux — la clé est l'**intentionnalité**, pas l'intensité.
 
-### Phase 3 : Variation Structurelle (Anti-footprint)
-Varier ALÉATOIREMENT entre ces patterns selon la thématique :
+### Phase 1 : Design Thinking (AVANT de coder)
 
-**Layouts de page d'accueil** (choisir 1) :
-- Hero plein écran + sections empilées verticalement
-- Split-screen (image gauche, texte droite)
-- Bento Grid asymétrique
-- Hero avec vidéo/animation de fond
-- Grille de cartes masonry
+Avant de coder, comprends le contexte et engage-toi dans une direction esthétique AFFIRMÉE :
 
-**Structures de navigation** (choisir 1) :
-- Navbar fixe transparente qui se solidifie au scroll
-- Navbar classique avec barre colorée
-- Sidebar menu hamburger sur mobile + navbar desktop
-- Header minimaliste centré
+1. **Objectif** : Quel problème cette interface résout-elle ? Qui l'utilise ?
+2. **Ton** : Choisis un extrême qui correspond à la thématique :
+   - Brutalement minimal, maximaliste chaotique, rétro-futuriste
+   - Organique/naturel, luxe/raffiné, ludique/toy-like
+   - Éditorial/magazine, brutaliste/brut, art déco/géométrique
+   - Doux/pastel, industriel/utilitaire, néo-classique
+3. **Différenciation** : Qu'est-ce qui rend ce site INOUBLIABLE ? Quelle est la chose dont quelqu'un se souviendra ?
 
-**Styles typographiques** (choisir 1 paire) :
-- Serif titres + Sans-serif corps (ex: Playfair Display + Inter)
-- Display titres + Mono accents (ex: Space Grotesk + JetBrains Mono)
-- Sans-serif uniforme moderne (ex: Plus Jakarta Sans)
-- Humaniste chaleureux (ex: Nunito + Merriweather)
-- Bold statement (ex: Outfit + Source Sans 3)
+### Phase 2 : Typographie Distinctive
 
-**Effets visuels** (choisir 2-3) :
-- Hover cards avec élévation (shadow + translateY)
-- Gradient overlays sur images
-- Border-radius géométriques (rounded-2xl vs sharp)
-- Animations d'entrée subtiles (fade-in, slide-up)
-- Glassmorphism / backdrop-blur sur certains composants
-- Dividers décoratifs (vagues, diagonales, courbes)
+La typographie fait 50% du design. **INTERDITS** : Inter, Roboto, Arial, system-ui, sans-serif générique.
 
-### Phase 4 : Développement
-- Créer TOUTES les pages listées dans `instructions.md`
-- Chaque page doit avoir du contenu RÉEL (pas de Lorem ipsum)
-- Le formulaire de contact doit être fonctionnel (ou au minimum un mailto:)
-- Le Footer doit lister UNIQUEMENT des pages qui existent
+Choisis des polices **belles, uniques et intéressantes** qui élèvent l'esthétique :
+- Associe une fonte display distinctive avec une fonte body raffinée
+- Les choix doivent être inattendus et pleins de caractère
+
+**Exemples de paires audacieuses** (ne JAMAIS réutiliser la même paire entre deux sites) :
+- **Luxe/Raffiné** : Cormorant Garamond + Montserrat
+- **Nature/Organique** : Libre Baskerville + Cabin
+- **Tech/Moderne** : DM Sans + IBM Plex Mono
+- **Éditorial/Magazine** : Fraunces + Work Sans
+- **Ludique/Créatif** : Sora + Lexend
+- **Classique/Élégant** : Lora + Raleway
+- **Bold/Statement** : Archivo Black + Karla
+- **Minimaliste/Épuré** : Manrope + Space Mono
+- **Chaleureux/Humain** : Vollkorn + Nunito Sans
+- **Géométrique/Art Déco** : Josefin Sans + Crimson Pro
+
+### Phase 3 : Couleurs & Thème
+
+Engage-toi dans une esthétique cohésive avec CSS variables.
+
+**Principes clés :**
+- Une couleur dominante avec des accents vifs surpasse les palettes timides et équilibrées
+- Créer une hiérarchie visuelle claire par la couleur
+- **Ratio WCAG AA** : 4.5:1 minimum texte/fond — tester CHAQUE combinaison
+
+**Créer dans `globals.css` :**
+```css
+:root {
+  --color-primary: /* issue de l'univers thématique */;
+  --color-secondary: /* complémentaire */;
+  --color-accent: /* pour CTA, liens actifs */;
+  --color-background: /* fond principal */;
+  --color-foreground: /* texte principal */;
+  --color-muted: /* texte secondaire */;
+  --color-surface: /* cartes, sections alternées */;
+  --color-border: /* bordures subtiles */;
+}
+```
+
+### Phase 4 : Composition Spatiale
+
+Layouts inattendus. Asymétrie. Overlap. Flux diagonal. Éléments qui brisent la grille. Espace négatif généreux OU densité contrôlée.
+
+**Layouts page d'accueil** (choisir 1 et varier à chaque site) :
+- Hero plein écran avec parallaxe ou animation
+- Split-screen asymétrique (60/40 ou 70/30)
+- Bento Grid avec éléments de tailles variées
+- Hero vidéo ou animation SVG de fond
+- Composition en couches superposées (overlap/offset)
+- Scroll horizontal pour une section showcase
+
+**Navigation** (choisir 1) :
+- Navbar transparente → opaque au scroll, avec animation
+- Navbar avec accent coloré latéral ou inférieur
+- Menu hamburger créatif avec transition plein écran
+- Header minimaliste centré avec navigation discrète
+
+### Phase 5 : Motion & Micro-interactions
+
+Les animations donnent vie à l'interface. Prioriser les solutions CSS-only.
+
+**High-impact :**
+- Load page avec staggered reveals (animation-delay séquentiel)
+- Hover sur les cartes : élévation + scale subtil (transform: translateY(-4px) scale(1.02))
+- Scroll-triggered fade-in / slide-up des sections
+- Transition douce des couleurs de la navbar au scroll
+
+**Implémentation CSS simple :**
+```css
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-in {
+  animation: fadeInUp 0.6s ease-out forwards;
+  opacity: 0;
+}
+.delay-1 { animation-delay: 0.1s; }
+.delay-2 { animation-delay: 0.2s; }
+.delay-3 { animation-delay: 0.3s; }
+```
+
+### Phase 6 : Fonds & Détails Visuels
+
+Créer de l'atmosphère et de la profondeur plutôt que des fonds unis par défaut :
+- Gradient meshes subtils
+- Textures de bruit (grain overlay CSS)
+- Patterns géométriques légers
+- Transparences superposées
+- Ombres dramatiques ou douces selon le ton
+- Bordures décoratives
+- Dividers créatifs (vagues SVG, diagonales, courbes)
+
+```css
+/* Exemple : Grain overlay subtil */
+.grain::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  opacity: 0.03;
+  background: url("data:image/svg+xml,..."); /* noise pattern */
+  pointer-events: none;
+  z-index: 9999;
+}
+```
+
+### ❌ Anti-patterns Design (JAMAIS faire)
+
+- ❌ Polices génériques (Inter, Roboto, Arial, system fonts)
+- ❌ Gradients violets sur fond blanc (cliché IA)
+- ❌ Layouts prévisibles et patterns de composants cookie-cutter
+- ❌ Design sans caractère spécifique au contexte
+- ❌ Converger sur les mêmes choix (Space Grotesk) entre les sites
+- ❌ Fonds unis partout sans texture ni profondeur
+- ❌ Animations timides ou inexistantes
+- ❌ Palette de 2 couleurs timides (gris + bleu)
 
 ---
 
@@ -212,6 +293,8 @@ Avant de terminer, vérifie :
 - [ ] `injectDofollowMarker()` est appliqué AVANT le rendu Markdown
 - [ ] `revalidate = 3600` est présent sur toutes les pages
 - [ ] La palette de couleurs est UNIQUE et adaptée à la thématique
-- [ ] Les polices Google sont chargées dans `layout.tsx`
-- [ ] Le design est visuellement distinct de tout autre site du réseau
+- [ ] Les polices Google sont **distinctives** (pas Inter/Roboto/Arial)
+- [ ] Le design est visuellement INOUBLIABLE et spécifique à la thématique
 - [ ] Le contraste texte/fond est suffisant partout (WCAG AA)
+- [ ] Des animations/transitions sont présentes (fade-in, hover effects)
+- [ ] Le fond n'est PAS un aplat blanc uni partout (textures, gradients, variations)
