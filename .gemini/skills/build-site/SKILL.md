@@ -61,6 +61,21 @@ Tu DOIS créer ou modifier **uniquement** ces fichiers :
 
 ---
 
+## 🚫 RÈGLE CRITIQUE : AUCUN FAUX ARTICLE DE BLOG
+
+**Les articles de blog viennent EXCLUSIVEMENT de Supabase.** Ne JAMAIS générer de faux articles, de faux titres d'articles, ni de faux contenus d'articles dans le code.
+
+### Ce que ça implique :
+1. **Sur la page d'accueil** : NE PAS créer de section "Derniers articles" avec des articles fictifs hardcodés. Si tu veux une section articles sur la home, elle doit appeler `getPublishedBlogPosts()` et gérer le cas vide.
+2. **Sur la page `/blog`** : Afficher les articles de Supabase via `getPublishedBlogPosts()`. Si aucun article → message vide (voir ci-dessous).
+3. **Sur les pages catégories** : Pareil, utiliser `getPostsByCategory()`, gérer le cas vide.
+4. **NE JAMAIS hardcoder** de titres d'articles, résumés, ou liens vers des articles spécifiques.
+
+### Message pour les sections/pages vides (EXACTEMENT ce texte) :
+> "Aucun article publié pour le moment."
+
+**INTERDIT** : "En préparation", "En construction", "À venir", "Nos articles arrivent bientôt", "Bientôt disponible".
+
 ## 🚨 RÈGLE D'OR : ZÉRO PAGE 404
 
 **AUCUNE page du site ne doit JAMAIS afficher une erreur 404.** C'est la règle la plus importante pour le SEO.
@@ -73,7 +88,7 @@ Tu DOIS créer ou modifier **uniquement** ces fichiers :
    - **Option A** : Créer la page complète avec du contenu riche
    - **Option B** : Faire pointer le lien vers `/blog?category=nom-categorie` (le blog filtré)
    - **JAMAIS** d'option C : ne JAMAIS laisser un lien pointer vers une page qui n'existe pas
-5. **La page `/blog` ne doit JAMAIS afficher une 404** — Si aucun article n'existe encore, afficher un message élégant : "Nos articles arrivent bientôt. Revenez nous voir !"
+5. **La page `/blog` ne doit JAMAIS afficher une 404** — Si aucun article n'existe encore, afficher : "Aucun article publié pour le moment."
 6. **La page `/blog/[slug]` doit afficher un `notFound()`** de Next.js si l'article n'existe pas (pas une page blanche, pas un crash)
 
 ### Pattern pour les pages thématiques :
@@ -109,7 +124,7 @@ if (posts.length === 0) {
   return (
     <main>
       <h1>Blog</h1>
-      <p>Nos articles arrivent bientôt. Revenez nous voir !</p>
+      <p>Aucun article publié pour le moment.</p>
     </main>
   );
 }

@@ -27,13 +27,19 @@ next.config.ts, package.json, tsconfig.json, postcss.config.js, eslint.config.mj
 - `components/Header.tsx`, `components/Footer.tsx`, `components/BlogCard.tsx`
 - `app/icon.svg` — Favicon adapté
 
+## 🚫 AUCUN FAUX ARTICLE DE BLOG
+Les articles viennent EXCLUSIVEMENT de Supabase. Ne JAMAIS générer de faux articles ni hardcoder de titres/résumés d'articles.
+- Home : pas de section "Derniers articles" avec des données fictives. Si section articles, appeler `getPublishedBlogPosts()` et gérer le cas vide.
+- Blog/catégories vides → message EXACT : **"Aucun article publié pour le moment."**
+- **INTERDIT** : "En préparation", "En construction", "À venir", "Bientôt disponible"
+
 ## 🚨 RÈGLE D'OR : ZÉRO PAGE 404
 
 **Aucune page du site ne doit JAMAIS afficher une 404.**
 - Chaque lien du Header/Footer DOIT pointer vers une page existante
 - Ne JAMAIS créer de lien vers une page non créée
 - Les pages thématiques : les créer remplies OU redirect vers `/blog?category=xxx`
-- `/blog` sans articles → message "Nos articles arrivent bientôt"
+- `/blog` sans articles → "Aucun article publié pour le moment."
 - `/blog/[slug]` article inexistant → `notFound()` (pas page blanche)
 
 ## 📄 PAGES OBLIGATOIRES (toujours remplies)
