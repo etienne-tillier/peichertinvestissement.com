@@ -13,7 +13,7 @@ Le fichier `instructions.md` à la racine contient le **brief thématique** (des
 
 ## ⛔ FICHIERS INTERDITS — NE JAMAIS MODIFIER
 
-Ces fichiers contiennent la logique critique (SEO, netlinking, Supabase). Ils sont **parfaits** et ne doivent **jamais** être modifiés, renommés ou supprimés :
+Ces fichiers contiennent la logique critique (SEO, netlinking, Supabase). Ils sont **parfaits** et ne doivent **jamais** être modifiés, renommés ou supprimés. **NE PAS LES OUVRIR, NE PAS LES ÉDITER, NE PAS LES RECRÉER** :
 
 ```
 lib/supabase.ts          ← Client Supabase admin (safe-init)
@@ -33,6 +33,10 @@ postcss.config.js        ← PostCSS
 eslint.config.mjs        ← ESLint
 ```
 
+**⛔ Si tu modifies UN SEUL de ces fichiers, le site sera cassé. NE LE FAIS PAS.**
+
+---
+
 ## ✅ FICHIERS À CRÉER OU MODIFIER
 
 Tu DOIS créer ou modifier **uniquement** ces fichiers :
@@ -40,20 +44,106 @@ Tu DOIS créer ou modifier **uniquement** ces fichiers :
 | Fichier | Action |
 |---------|--------|
 | `config/site.ts` | **CRÉER** — Config du site (name, domain, url, mainNav) |
-| `app/globals.css` | **MODIFIER** — Ajouter la palette CSS unique + variables |
+| `app/globals.css` | **MODIFIER** — Ajouter la palette CSS unique + variables + animations |
 | `app/layout.tsx` | **MODIFIER** — Ajouter Google Fonts + `<Header />` + `<Footer />` + metadata |
 | `app/page.tsx` | **CRÉER** — Page d'accueil complète |
-| `app/blog/page.tsx` | **CRÉER** — Liste des articles |
+| `app/blog/page.tsx` | **CRÉER** — Liste des articles (avec état vide si aucun article) |
 | `app/blog/[slug]/page.tsx` | **CRÉER** — Page article (voir section Blog ci-dessous) |
-| `app/blog/categorie/[slug]/page.tsx` | **CRÉER** — Articles par catégorie |
-| `app/contact/page.tsx` | **CRÉER** — Page contact |
-| `app/a-propos/page.tsx` | **CRÉER** — Page à propos |
-| `app/mentions-legales/page.tsx` | **CRÉER** — Mentions légales |
-| `app/politique-confidentialite/page.tsx` | **CRÉER** — Politique de confidentialité |
+| `app/blog/categorie/[slug]/page.tsx` | **CRÉER** — Articles par catégorie (avec état vide) |
+| `app/contact/page.tsx` | **CRÉER** — Page contact REMPLIE (texte thématique + email contact@DOMAIN visible) |
+| `app/a-propos/page.tsx` | **CRÉER** — Page à propos REMPLIE (données fictives cohérentes) |
+| `app/mentions-legales/page.tsx` | **CRÉER** — Mentions légales REMPLIES |
+| `app/politique-confidentialite/page.tsx` | **CRÉER** — Politique de confidentialité REMPLIE |
 | `components/Header.tsx` | **CRÉER** — Header du site |
 | `components/Footer.tsx` | **CRÉER** — Footer du site |
 | `components/BlogCard.tsx` | **CRÉER** — Carte d'article pour les listings |
 | `app/icon.svg` | **CRÉER** — Favicon SVG adapté à la thématique |
+
+---
+
+## 🚨 RÈGLE D'OR : ZÉRO PAGE 404
+
+**AUCUNE page du site ne doit JAMAIS afficher une erreur 404.** C'est la règle la plus importante pour le SEO.
+
+### Règles strictes :
+1. **Chaque lien dans le Header et le Footer DOIT pointer vers une page qui EXISTE**
+2. **Ne JAMAIS créer de lien vers une page que tu n'as pas créée**
+3. **Toutes les pages obligatoires (contact, à propos, mentions légales, confidentialité) doivent être créées ET remplies avec du contenu réel/fictif cohérent**
+4. **Les pages thématiques** (ex: "Équipement", "Destinations", "Guides", etc.) ont 2 options :
+   - **Option A** : Créer la page complète avec du contenu riche
+   - **Option B** : Faire pointer le lien vers `/blog?category=nom-categorie` (le blog filtré)
+   - **JAMAIS** d'option C : ne JAMAIS laisser un lien pointer vers une page qui n'existe pas
+5. **La page `/blog` ne doit JAMAIS afficher une 404** — Si aucun article n'existe encore, afficher un message élégant : "Nos articles arrivent bientôt. Revenez nous voir !"
+6. **La page `/blog/[slug]` doit afficher un `notFound()`** de Next.js si l'article n'existe pas (pas une page blanche, pas un crash)
+
+### Pattern pour les pages thématiques :
+```typescript
+// Si tu crées une page "Guides" par exemple :
+// app/guides/page.tsx — doit être REMPLIE ou rediriger vers le blog
+
+// Option A : Page complète avec contenu
+export default function GuidesPage() {
+  return (
+    <main>
+      <h1>Nos Guides</h1>
+      {/* Contenu réel, pas de placeholder */}
+      <p>Découvrez nos guides détaillés...</p>
+      {/* + Lien vers les articles du blog catégorie "guides" */}
+    </main>
+  );
+}
+
+// Option B : Redirect vers le blog
+import { redirect } from "next/navigation";
+export default function GuidesPage() {
+  redirect("/blog?category=guides");
+}
+```
+
+### Pattern pour le blog vide :
+```typescript
+// app/blog/page.tsx
+const posts = await getPublishedBlogPosts();
+
+if (posts.length === 0) {
+  return (
+    <main>
+      <h1>Blog</h1>
+      <p>Nos articles arrivent bientôt. Revenez nous voir !</p>
+    </main>
+  );
+}
+// ... afficher les articles normalement
+```
+
+---
+
+## 📄 PAGES OBLIGATOIRES — Contenu Minimum
+
+### Contact (`app/contact/page.tsx`)
+- Titre H1 thématisé (ex: "Contactez l'équipe", "Parlons ensemble", etc.)
+- **PAS DE FORMULAIRE** — juste une page avec du texte thématique cohérent
+- Afficher l'email `contact@{SITE_DOMAIN}` bien visible, que le visiteur peut copier-coller
+- Texte d'accompagnement adapté à la thématique (ex: "Une question sur nos itinéraires ? Écrivez-nous !")
+- Adresse fictive cohérente (optionnel), horaires de réponse (optionnel)
+
+### À propos (`app/a-propos/page.tsx`)
+- Titre H1 descriptif
+- Histoire fictive mais COHÉRENTE avec la thématique
+- Mission et valeurs
+- Équipe fictive (si pertinent)
+- Image de la section `instructions.md` si disponible
+
+### Mentions légales (`app/mentions-legales/page.tsx`)
+- Éditeur du site : "{SITE_NAME}, {adresse fictive}"
+- Hébergeur : "Ce site est hébergé par un prestataire européen conforme aux normes en vigueur."
+- Propriété intellectuelle, limitation de responsabilité, droit applicable
+
+### Politique de confidentialité (`app/politique-confidentialite/page.tsx`)
+- Introduction, données collectées (formulaire contact, cookies analytics)
+- Base légale (consentement)
+- Droits des utilisateurs (accès, rectification, suppression)
+- Contact DPO : contact@{SITE_DOMAIN}
 
 ---
 
@@ -72,23 +162,15 @@ import { injectDofollowMarker } from "@/lib/dofollow";
 import { getBlogPostBySlug, getPublishedBlogPosts } from "@/lib/blog";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { notFound } from "next/navigation";
 
-// Dans le composant :
-const bodyMd = injectDofollowMarker(displayBodyMd || "");
+// Récupérer l'article :
+const post = await getBlogPostBySlug(slug);
+if (!post) return notFound(); // ← Jamais de page blanche
 
-<ReactMarkdown
-  remarkPlugins={[remarkGfm]}
-  components={{ a: MarkdownLink }}
->
-  {bodyMd}
-</ReactMarkdown>
-```
-
-### Détection de traduction
-```typescript
+// Détection traduction :
 let displayH1 = post.h1;
 let displayBody = post.body_md;
-
 if (post.slug !== slug && post.translations) {
   for (const [_key, val] of Object.entries(post.translations)) {
     if ((val as any).slug === slug) {
@@ -98,6 +180,16 @@ if (post.slug !== slug && post.translations) {
     }
   }
 }
+
+// Rendu Markdown avec dofollow :
+const bodyMd = injectDofollowMarker(displayBody || "");
+
+<ReactMarkdown
+  remarkPlugins={[remarkGfm]}
+  components={{ a: MarkdownLink }}
+>
+  {bodyMd}
+</ReactMarkdown>
 ```
 
 ### Hreflang dans generateMetadata
@@ -124,177 +216,113 @@ curl -L "URL_R2_IMAGE" -o public/images/nom-fichier.jpeg
 
 ---
 
-## 🎨 DESIGN EXCELLENCE — Frontend Design de Haut Niveau
+## 🎨 DESIGN EXCELLENCE — Frontend Distinctif
 
 ### Philosophie Fondamentale
 
-Chaque site doit être une création **distinctive et mémorable**, pas un template générique. Tu es capable de créations extraordinaires — n'hésite pas, montre ce qui peut être véritablement créé en sortant des sentiers battus et en s'engageant pleinement dans une vision distinctive.
+Chaque site doit être une création **distinctive et mémorable**, pas un template générique. Tu es capable de créations extraordinaires — montre ce qui peut être véritablement créé en sortant des sentiers battus et en s'engageant pleinement dans une vision esthétique distinctive.
 
 **CRITIQUE** : Choisis une direction conceptuelle claire et exécute-la avec précision. Le maximalisme audacieux et le minimalisme raffiné fonctionnent tous les deux — la clé est l'**intentionnalité**, pas l'intensité.
 
 ### Phase 1 : Design Thinking (AVANT de coder)
 
-Avant de coder, comprends le contexte et engage-toi dans une direction esthétique AFFIRMÉE :
-
 1. **Objectif** : Quel problème cette interface résout-elle ? Qui l'utilise ?
 2. **Ton** : Choisis un extrême qui correspond à la thématique :
-   - Brutalement minimal, maximaliste chaotique, rétro-futuriste
-   - Organique/naturel, luxe/raffiné, ludique/toy-like
-   - Éditorial/magazine, brutaliste/brut, art déco/géométrique
-   - Doux/pastel, industriel/utilitaire, néo-classique
-3. **Différenciation** : Qu'est-ce qui rend ce site INOUBLIABLE ? Quelle est la chose dont quelqu'un se souviendra ?
+   - Brutalement minimal, maximaliste, rétro-futuriste, organique/naturel
+   - Luxe/raffiné, ludique, éditorial/magazine, brutaliste/brut
+   - Art déco/géométrique, doux/pastel, industriel/utilitaire
+3. **Différenciation** : Qu'est-ce qui rend ce site INOUBLIABLE ?
 
 ### Phase 2 : Typographie Distinctive
 
-La typographie fait 50% du design. **INTERDITS** : Inter, Roboto, Arial, system-ui, sans-serif générique.
+**INTERDITS** : Inter, Roboto, Arial, system-ui, sans-serif générique, Space Grotesk.
 
-Choisis des polices **belles, uniques et intéressantes** qui élèvent l'esthétique :
-- Associe une fonte display distinctive avec une fonte body raffinée
-- Les choix doivent être inattendus et pleins de caractère
+Choisis des polices **belles, uniques et intéressantes** :
+- **Luxe** : Cormorant Garamond + Montserrat
+- **Nature** : Libre Baskerville + Cabin
+- **Tech** : DM Sans + IBM Plex Mono
+- **Éditorial** : Fraunces + Work Sans
+- **Créatif** : Sora + Lexend
+- **Classique** : Lora + Raleway
+- **Bold** : Archivo Black + Karla
+- **Minimaliste** : Manrope + Space Mono
+- **Chaleureux** : Vollkorn + Nunito Sans
+- **Géométrique** : Josefin Sans + Crimson Pro
 
-**Exemples de paires audacieuses** (ne JAMAIS réutiliser la même paire entre deux sites) :
-- **Luxe/Raffiné** : Cormorant Garamond + Montserrat
-- **Nature/Organique** : Libre Baskerville + Cabin
-- **Tech/Moderne** : DM Sans + IBM Plex Mono
-- **Éditorial/Magazine** : Fraunces + Work Sans
-- **Ludique/Créatif** : Sora + Lexend
-- **Classique/Élégant** : Lora + Raleway
-- **Bold/Statement** : Archivo Black + Karla
-- **Minimaliste/Épuré** : Manrope + Space Mono
-- **Chaleureux/Humain** : Vollkorn + Nunito Sans
-- **Géométrique/Art Déco** : Josefin Sans + Crimson Pro
+Ne JAMAIS réutiliser la même paire entre deux sites.
 
 ### Phase 3 : Couleurs & Thème
 
-Engage-toi dans une esthétique cohésive avec CSS variables.
+CSS variables dans `globals.css`. Couleur dominante + accents vifs > palette timide.
 
-**Principes clés :**
-- Une couleur dominante avec des accents vifs surpasse les palettes timides et équilibrées
-- Créer une hiérarchie visuelle claire par la couleur
-- **Ratio WCAG AA** : 4.5:1 minimum texte/fond — tester CHAQUE combinaison
-
-**Créer dans `globals.css` :**
 ```css
 :root {
-  --color-primary: /* issue de l'univers thématique */;
+  --color-primary: /* issue de la thématique */;
   --color-secondary: /* complémentaire */;
-  --color-accent: /* pour CTA, liens actifs */;
-  --color-background: /* fond principal */;
-  --color-foreground: /* texte principal */;
+  --color-accent: /* CTA, liens actifs */;
+  --color-background: /* fond */;
+  --color-foreground: /* texte */;
   --color-muted: /* texte secondaire */;
-  --color-surface: /* cartes, sections alternées */;
-  --color-border: /* bordures subtiles */;
+  --color-surface: /* cartes, sections */;
+  --color-border: /* bordures */;
 }
 ```
 
-### Phase 4 : Composition Spatiale
+**Contraste WCAG AA** : 4.5:1 minimum — tester CHAQUE combinaison texte/fond.
 
-Layouts inattendus. Asymétrie. Overlap. Flux diagonal. Éléments qui brisent la grille. Espace négatif généreux OU densité contrôlée.
+### Phase 4 : Composition & Motion
 
-**Layouts page d'accueil** (choisir 1 et varier à chaque site) :
-- Hero plein écran avec parallaxe ou animation
-- Split-screen asymétrique (60/40 ou 70/30)
-- Bento Grid avec éléments de tailles variées
-- Hero vidéo ou animation SVG de fond
-- Composition en couches superposées (overlap/offset)
-- Scroll horizontal pour une section showcase
+- Layouts inattendus : asymétrie, overlap, grid-breaking
+- Animations CSS d'entrée : staggered reveals, fade-in, slide-up
+- Hover cards : `translateY(-4px)` + ombre portée
+- Backgrounds texturés : gradients, grain overlay, patterns subtils
+- Pas de fonds blancs unis partout
 
-**Navigation** (choisir 1) :
-- Navbar transparente → opaque au scroll, avec animation
-- Navbar avec accent coloré latéral ou inférieur
-- Menu hamburger créatif avec transition plein écran
-- Header minimaliste centré avec navigation discrète
+### ❌ Anti-patterns (JAMAIS)
 
-### Phase 5 : Motion & Micro-interactions
-
-Les animations donnent vie à l'interface. Prioriser les solutions CSS-only.
-
-**High-impact :**
-- Load page avec staggered reveals (animation-delay séquentiel)
-- Hover sur les cartes : élévation + scale subtil (transform: translateY(-4px) scale(1.02))
-- Scroll-triggered fade-in / slide-up des sections
-- Transition douce des couleurs de la navbar au scroll
-
-**Implémentation CSS simple :**
-```css
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.animate-in {
-  animation: fadeInUp 0.6s ease-out forwards;
-  opacity: 0;
-}
-.delay-1 { animation-delay: 0.1s; }
-.delay-2 { animation-delay: 0.2s; }
-.delay-3 { animation-delay: 0.3s; }
-```
-
-### Phase 6 : Fonds & Détails Visuels
-
-Créer de l'atmosphère et de la profondeur plutôt que des fonds unis par défaut :
-- Gradient meshes subtils
-- Textures de bruit (grain overlay CSS)
-- Patterns géométriques légers
-- Transparences superposées
-- Ombres dramatiques ou douces selon le ton
-- Bordures décoratives
-- Dividers créatifs (vagues SVG, diagonales, courbes)
-
-```css
-/* Exemple : Grain overlay subtil */
-.grain::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  opacity: 0.03;
-  background: url("data:image/svg+xml,..."); /* noise pattern */
-  pointer-events: none;
-  z-index: 9999;
-}
-```
-
-### ❌ Anti-patterns Design (JAMAIS faire)
-
-- ❌ Polices génériques (Inter, Roboto, Arial, system fonts)
-- ❌ Gradients violets sur fond blanc (cliché IA)
-- ❌ Layouts prévisibles et patterns de composants cookie-cutter
-- ❌ Design sans caractère spécifique au contexte
-- ❌ Converger sur les mêmes choix (Space Grotesk) entre les sites
-- ❌ Fonds unis partout sans texture ni profondeur
-- ❌ Animations timides ou inexistantes
-- ❌ Palette de 2 couleurs timides (gris + bleu)
+- ❌ Polices génériques (Inter, Roboto, Arial)
+- ❌ Gradients violets sur blanc (cliché IA)
+- ❌ Layouts cookie-cutter sans caractère
+- ❌ Fonds blancs unis sans texture ni profondeur
+- ❌ Palette timide de 2 couleurs (gris + bleu)
+- ❌ Converger sur les mêmes choix entre les sites
 
 ---
 
 ## ⚠️ EXIGENCES ABSOLUES — Zéro Tolérance
 
-1. **AUCUN placeholder** : Pas de Lorem ipsum, [À compléter], [Nom]
-2. **AUCUN lien cassé** : Tous les liens du Footer/Header pointent vers des pages existantes
-3. **AUCUN composant décoratif** non fonctionnel : Si tu mets une barre de recherche, elle doit marcher
-4. **Logo/favicon personnalisés** : Créer `app/icon.svg` adapté à la thématique
-5. **Header + Footer sur TOUTES les pages** : Via le `layout.tsx`
-6. **Contraste lisible** : Ratio 4.5:1 minimum partout
-7. **`npm run build` doit passer** : 0 erreur TypeScript, 0 erreur de build
-8. **ISR activé partout** : `export const revalidate = 3600` sur chaque page
+1. **ZÉRO PAGE 404** : Aucun lien ne doit mener à une page inexistante
+2. **AUCUN placeholder** : Pas de Lorem ipsum, [À compléter], [Nom], TODO
+3. **Toutes les pages obligatoires remplies** : contact, à propos, mentions légales, confidentialité
+4. **Blog fonctionnel** : Affiche les articles OU un message "articles à venir"
+5. **Favicon personnalisé** : `app/icon.svg` adapté à la thématique
+6. **Header + Footer cohérents** : Liens UNIQUEMENT vers des pages existantes
+7. **Contraste lisible** : 4.5:1 minimum partout
+8. **`npm run build` doit passer** : 0 erreur TypeScript, 0 erreur de build
+9. **ISR activé** : `export const revalidate = 3600` sur chaque page
+10. **NE JAMAIS modifier les fichiers Core** : Même pas pour "améliorer"
 
 ---
 
 ## 🔍 CHECKLIST FINALE
 
-Avant de terminer, vérifie :
+Avant de terminer, vérifie CHAQUE point :
 
 - [ ] `npm run build` passe sans erreur
-- [ ] Toutes les pages listées dans `instructions.md` existent
-- [ ] Le Header contient la navigation définie dans `config/site.ts`
-- [ ] Le Footer ne contient AUCUN lien vers une page inexistante
+- [ ] TOUTES les pages listées dans le tableau "FICHIERS À CRÉER" existent
+- [ ] AUCUN lien du Header ne mène à une 404
+- [ ] AUCUN lien du Footer ne mène à une 404
+- [ ] AUCUN lien de la page d'accueil ne mène à une 404
+- [ ] La page `/blog` affiche les articles OU un message "à venir"
+- [ ] La page `/contact` est REMPLIE avec un formulaire fonctionnel
+- [ ] La page `/a-propos` est REMPLIE avec du contenu cohérent
+- [ ] La page `/mentions-legales` est REMPLIE
+- [ ] La page `/politique-confidentialite` est REMPLIE
 - [ ] Les images ont été téléchargées dans `public/images/`
 - [ ] `ReactMarkdown` utilise `MarkdownLink` (pas de `<a>` standard)
 - [ ] `injectDofollowMarker()` est appliqué AVANT le rendu Markdown
 - [ ] `revalidate = 3600` est présent sur toutes les pages
-- [ ] La palette de couleurs est UNIQUE et adaptée à la thématique
-- [ ] Les polices Google sont **distinctives** (pas Inter/Roboto/Arial)
-- [ ] Le design est visuellement INOUBLIABLE et spécifique à la thématique
-- [ ] Le contraste texte/fond est suffisant partout (WCAG AA)
-- [ ] Des animations/transitions sont présentes (fade-in, hover effects)
-- [ ] Le fond n'est PAS un aplat blanc uni partout (textures, gradients, variations)
+- [ ] Les polices sont **distinctives** (pas Inter/Roboto/Arial)
+- [ ] Le design est visuellement INOUBLIABLE
+- [ ] Le contraste texte/fond est suffisant (WCAG AA)
+- [ ] Les fichiers Core n'ont PAS été modifiés

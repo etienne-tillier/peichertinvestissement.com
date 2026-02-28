@@ -1,13 +1,3 @@
-/**
- * Dofollow marker injection for Markdown content.
- *
- * Scans markdown for links followed by {dofollow} annotation and converts
- * them to use a query parameter that MarkdownLink.tsx can detect.
- *
- * Example:
- *   Input:  [Anchor](https://partner.com) {dofollow}
- *   Output: [Anchor](https://partner.com?__dofollow=1)
- */
 export function injectDofollowMarker(markdown: string): string {
     return markdown.replace(
         /(\[[^\]]+\])\(([^)]+)\)\s*(?:\{dofollow\}|\{do follow\}|dofollow|do follow|do-follow)/gi,
