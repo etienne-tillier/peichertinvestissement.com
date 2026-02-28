@@ -56,7 +56,7 @@ Tu DOIS créer ou modifier **uniquement** ces fichiers :
 | `app/politique-confidentialite/page.tsx` | **CRÉER** — Politique de confidentialité REMPLIE |
 | `components/Header.tsx` | **CRÉER** — Header du site |
 | `components/Footer.tsx` | **CRÉER** — Footer du site |
-| `components/BlogCard.tsx` | **CRÉER** — Carte d'article pour les listings |
+| `components/BlogCard.tsx` | **CRÉER** — Carte d'article avec IMAGE COVER obligatoire |
 | `app/icon.svg` | **CRÉER** — Favicon SVG adapté à la thématique |
 
 ---
@@ -128,7 +128,37 @@ if (posts.length === 0) {
     </main>
   );
 }
-// ... afficher les articles normalement
+// Afficher les articles avec BlogCard — TOUJOURS afficher l'image cover :
+// posts.map(post => <BlogCard key={post.id} post={post} />)
+```
+
+### BlogCard — Pattern OBLIGATOIRE pour les cartes d'articles
+```tsx
+import Image from "next/image";
+import Link from "next/link";
+import { BlogPost } from "@/types";
+
+export function BlogCard({ post }: { post: BlogPost }) {
+  return (
+    <Link href={`/blog/${post.slug}`}>
+      <article>
+        {/* IMAGE COVER OBLIGATOIRE — Toujours afficher si disponible */}
+        {post.cover?.file_url && (
+          <Image
+            src={post.cover.file_url}
+            alt={post.cover.alt || post.h1}
+            width={800}
+            height={450}
+            className="object-cover w-full"
+          />
+        )}
+        <h2>{post.h1}</h2>
+        {post.excerpt && <p>{post.excerpt}</p>}
+        {post.author?.name && <span>Par {post.author.name}</span>}
+      </article>
+    </Link>
+  );
+}
 ```
 
 ---
@@ -198,6 +228,18 @@ if (post.slug !== slug && post.translations) {
 
 // Rendu Markdown avec dofollow :
 const bodyMd = injectDofollowMarker(displayBody || "");
+
+// IMAGE COVER — OBLIGATOIRE en haut de l'article
+{post.cover?.file_url && (
+  <Image
+    src={post.cover.file_url}
+    alt={post.cover.alt || displayH1}
+    width={1200}
+    height={630}
+    priority
+    className="w-full rounded-lg object-cover"
+  />
+)}
 
 <ReactMarkdown
   remarkPlugins={[remarkGfm]}

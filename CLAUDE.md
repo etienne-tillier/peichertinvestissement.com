@@ -81,12 +81,25 @@ if (post.slug !== slug && post.translations) {
 }
 
 const bodyMd = injectDofollowMarker(displayBody || "");
+
+// IMAGE COVER — OBLIGATOIRE en haut de l'article
+{post.cover?.file_url && (
+  <Image src={post.cover.file_url} alt={post.cover.alt || displayH1}
+    width={1200} height={630} priority className="w-full rounded-lg object-cover" />
+)}
+
 <ReactMarkdown remarkPlugins={[remarkGfm]} components={{ a: MarkdownLink }}>
   {bodyMd}
 </ReactMarkdown>
 ```
 
-### Images — Télécharger depuis R2
+### Images Blog — TOUJOURS afficher les covers
+Les images des articles viennent de Supabase via `post.cover.file_url`. **OBLIGATOIRE** :
+- **BlogCard** : afficher `post.cover.file_url` avec `<Image>` de Next.js
+- **Page article** : afficher le cover en grand en haut de l'article avec `priority`
+- Utiliser `post.cover.alt || post.h1` comme alt text
+
+### Images statiques — Télécharger depuis R2
 ```bash
 curl -L "URL_R2" -o public/images/nom.jpeg
 ```
