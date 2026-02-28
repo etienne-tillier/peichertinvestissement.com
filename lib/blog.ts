@@ -5,7 +5,7 @@ const SITE_DOMAIN = (process.env.SITE_DOMAIN || "").replace(/^https?:\/\//, "");
 
 const BLOG_LISTING_SELECT = `
   id, slug, h1, seo_title, meta_description, published_at, default_locale, excerpt,
-  cover:blog_assets(file_url, alt_text),
+  cover:blog_assets!cover_asset_id(file_url, alt),
   author:authors(name, avatar_url),
   categories:blog_post_categories(category:site_categories(id, slug, label))
 `;
@@ -13,8 +13,8 @@ const BLOG_LISTING_SELECT = `
 const BLOG_DETAIL_SELECT = `
   id, slug, h1, seo_title, meta_description, body_md, published_at, updated_at,
   default_locale, focus_keyword, excerpt, translations, faqs,
-  cover:blog_assets(file_url, alt_text),
-  author:authors(name, avatar_url, bio, role),
+  cover:blog_assets!cover_asset_id(file_url, alt),
+  author:authors(name, avatar_url, bio),
   categories:blog_post_categories(category:site_categories(id, slug, label))
 `;
 
@@ -83,8 +83,12 @@ export async function getPostsByCategory(categorySlug: string): Promise<BlogPost
     if (!siteId || !supabaseAdmin) return [];
     const { data: category } = await supabaseAdmin.from("site_categories").select("id").eq("site_id", siteId).eq("slug", categorySlug).single();
     if (!category) return [];
+    // Two-step: get post IDs from junction table, then fetch posts
+    const { data: postLinks } = await supabaseAdmin.from("blog_post_categories").select("post_id").eq("category_id", category.id);
+    if (!postLinks || postLinks.length === 0) return [];
+    const postIds = postLinks.map((pl) => pl.post_id);
     const { data: posts, error } = await supabaseAdmin.from("blog_posts").select(BLOG_LISTING_SELECT)
-        .eq("site_id", siteId).eq("status", "published").eq("categories.category_id", category.id)
+        .eq("site_id", siteId).eq("status", "published").in("id", postIds)
         .order("published_at", { ascending: false });
     if (error) return [];
     return (posts || []).map(normalizePost);
