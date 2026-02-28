@@ -60,8 +60,10 @@ export const revalidate = 3600;
 import { MarkdownLink } from "@/components/MarkdownLink";
 import { injectDofollowMarker } from "@/lib/dofollow";
 import { getBlogPostBySlug } from "@/lib/blog";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 
 const post = await getBlogPostBySlug(slug);
@@ -79,18 +81,35 @@ if (post.slug !== slug && post.translations) {
     }
   }
 }
-
 const bodyMd = injectDofollowMarker(displayBody || "");
 
-// IMAGE COVER — OBLIGATOIRE en haut de l'article
+// 1. IMAGE COVER
 {post.cover?.file_url && (
   <Image src={post.cover.file_url} alt={post.cover.alt || displayH1}
     width={1200} height={630} priority className="w-full rounded-lg object-cover" />
 )}
 
+// 2. SÉLECTEUR DE LANGUE — OBLIGATOIRE
+<LanguageSwitcher post={post} currentSlug={slug} />
+
+// 3. CONTENU
 <ReactMarkdown remarkPlugins={[remarkGfm]} components={{ a: MarkdownLink }}>
   {bodyMd}
 </ReactMarkdown>
+
+// 4. AUTEUR — OBLIGATOIRE en bas de l'article
+{post.author && (
+  <div className="flex items-center gap-4 mt-8 pt-8 border-t">
+    {post.author.avatar_url && (
+      <Image src={post.author.avatar_url} alt={post.author.name}
+        width={64} height={64} className="rounded-full object-cover" />
+    )}
+    <div>
+      <p className="font-semibold">{post.author.name}</p>
+      {post.author.bio && <p className="text-sm opacity-70">{post.author.bio}</p>}
+    </div>
+  </div>
+)}
 ```
 
 ### Images Blog — TOUJOURS afficher les covers

@@ -205,8 +205,10 @@ export const revalidate = 3600; // 1h minimum
 import { MarkdownLink } from "@/components/MarkdownLink";
 import { injectDofollowMarker } from "@/lib/dofollow";
 import { getBlogPostBySlug, getPublishedBlogPosts } from "@/lib/blog";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 
 // Récupérer l'article :
@@ -226,10 +228,11 @@ if (post.slug !== slug && post.translations) {
   }
 }
 
-// Rendu Markdown avec dofollow :
 const bodyMd = injectDofollowMarker(displayBody || "");
 
-// IMAGE COVER — OBLIGATOIRE en haut de l'article
+// === RENDU DE LA PAGE ARTICLE ===
+
+// 1. IMAGE COVER — OBLIGATOIRE en haut de l'article
 {post.cover?.file_url && (
   <Image
     src={post.cover.file_url}
@@ -241,12 +244,37 @@ const bodyMd = injectDofollowMarker(displayBody || "");
   />
 )}
 
+// 2. SÉLECTEUR DE LANGUE — OBLIGATOIRE (affiche les traductions disponibles)
+<LanguageSwitcher post={post} currentSlug={slug} />
+
+// 3. CONTENU MARKDOWN
 <ReactMarkdown
   remarkPlugins={[remarkGfm]}
   components={{ a: MarkdownLink }}
 >
   {bodyMd}
 </ReactMarkdown>
+
+// 4. AUTEUR — OBLIGATOIRE en bas de l'article
+{post.author && (
+  <div className="flex items-center gap-4 mt-8 pt-8 border-t">
+    {post.author.avatar_url && (
+      <Image
+        src={post.author.avatar_url}
+        alt={post.author.name}
+        width={64}
+        height={64}
+        className="rounded-full object-cover"
+      />
+    )}
+    <div>
+      <p className="font-semibold">{post.author.name}</p>
+      {post.author.bio && (
+        <p className="text-sm opacity-70">{post.author.bio}</p>
+      )}
+    </div>
+  </div>
+)}
 ```
 
 ### Hreflang dans generateMetadata
