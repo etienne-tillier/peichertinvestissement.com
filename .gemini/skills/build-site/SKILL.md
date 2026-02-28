@@ -380,7 +380,7 @@ CSS variables dans `globals.css`. Couleur dominante + accents vifs > palette tim
 2. **AUCUN placeholder** : Pas de Lorem ipsum, [À compléter], [Nom], TODO
 3. **Toutes les pages obligatoires remplies** : contact, à propos, mentions légales, confidentialité
 4. **Blog fonctionnel** : Affiche les articles OU un message "articles à venir"
-5. **Favicon personnalisé** : `app/icon.svg` adapté à la thématique
+5. **Favicon OBLIGATOIRE dans le navigateur** : Créer `app/icon.svg` — un SVG unique adapté à la thématique. C'est le logo dans l'onglet du navigateur, c'est la PREMIÈRE chose que l'utilisateur voit. Ne JAMAIS l'oublier.
 6. **Header + Footer cohérents** : Liens UNIQUEMENT vers des pages existantes
 7. **Contraste lisible** : 4.5:1 minimum partout
 8. **`npm run build` doit passer** : 0 erreur TypeScript, 0 erreur de build

@@ -147,7 +147,7 @@ Asymétrie, overlap, animations CSS d'entrée, hover effects, backgrounds textur
 2. AUCUN placeholder (Lorem ipsum, TODO, [À compléter])
 3. Toutes pages obligatoires REMPLIES
 4. Blog fonctionnel (articles OU message "à venir")
-5. Favicon dans `app/icon.svg`
+5. **Favicon OBLIGATOIRE** : Créer `app/icon.svg` — logo unique dans l'onglet du navigateur. PREMIÈRE chose vue par l'utilisateur.
 6. `npm run build` : 0 erreur
 7. `revalidate = 3600` sur chaque page
 8. NE JAMAIS modifier les fichiers Core
