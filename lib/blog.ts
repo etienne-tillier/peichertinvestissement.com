@@ -5,6 +5,7 @@ import { BlogPost } from "@/types";
 const SITE_ID = process.env.SITE_ID?.trim() || null;
 const SITE_DOMAIN = (process.env.SITE_DOMAIN || "").replace(/^https?:\/\//, "");
 const SITE_CACHE_KEY = SITE_ID || SITE_DOMAIN || "unknown-site";
+export const POSTS_PER_PAGE = 12;
 
 const BLOG_LISTING_SELECT = `
   id, slug, h1, seo_title, meta_description, published_at, default_locale, excerpt,
@@ -61,12 +62,88 @@ function normalizePost(post: any): BlogPost {
     };
 }
 
-const getPublishedBlogPostsCached = unstable_cache(
-    async (limit?: number): Promise<BlogPost[]> => {
+function parseTranslations(translations: unknown): Record<string, any> {
+    if (!translations) return {};
+    if (typeof translations === "string") {
+        try {
+            return JSON.parse(translations);
+        } catch {
+            return {};
+        }
+    }
+    if (typeof translations === "object") {
+        return translations as Record<string, any>;
+    }
+    return {};
+}
+
+function matchesSearch(post: BlogPost, rawSearchTerm?: string | null): boolean {
+    if (!rawSearchTerm) return true;
+
+    const searchTerm = rawSearchTerm.trim().toLowerCase();
+    if (!searchTerm) return true;
+
+    const translations = parseTranslations(post.translations);
+    const haystack = [
+        post.slug,
+        post.h1,
+        post.seo_title,
+        post.meta_description,
+        post.excerpt,
+        ...((post.categories || []).flatMap((category: any) => [category?.slug, category?.label])),
+        ...Object.values(translations).flatMap((translation: any) => [
+            translation?.slug,
+            translation?.h1,
+            translation?.seo_title,
+            translation?.meta_description,
+        ]),
+    ]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
+
+    return haystack.includes(searchTerm);
+}
+
+function parsePublishedPostsArgs(args: unknown[]) {
+    let locale: string | undefined;
+    let limit: number | undefined;
+    let offset = 0;
+    let searchTerm: string | undefined;
+
+    if (typeof args[0] === "string") {
+        const firstArg = args[0].trim();
+        if (/^[a-z]{2}(?:-[A-Z]{2})?$/.test(firstArg)) {
+            locale = firstArg;
+            if (typeof args[1] === "number") limit = args[1];
+            if (typeof args[2] === "number") offset = args[2];
+            if (typeof args[3] === "string") searchTerm = args[3];
+        } else {
+            searchTerm = firstArg;
+            if (typeof args[1] === "number") limit = args[1];
+            if (typeof args[2] === "number") offset = args[2];
+        }
+    } else {
+        if (typeof args[0] === "number") limit = args[0];
+        if (typeof args[1] === "number") offset = args[1];
+        if (typeof args[1] === "string") searchTerm = args[1];
+        if (typeof args[2] === "string") searchTerm = args[2];
+
+        if (limit === 0 && typeof args[1] === "number" && args[1] > 0) {
+            offset = 0;
+            limit = args[1];
+        }
+    }
+
+    return { locale, limit, offset, searchTerm };
+}
+
+const getAllPublishedBlogPostsCached = unstable_cache(
+    async (): Promise<BlogPost[]> => {
         const siteId = await getSiteId();
         if (!siteId || !supabaseAdmin) return [];
 
-        let query = supabaseAdmin
+        const { data, error } = await supabaseAdmin
             .from("blog_posts")
             .select(BLOG_LISTING_SELECT)
             .eq("site_id", siteId)
@@ -74,9 +151,6 @@ const getPublishedBlogPostsCached = unstable_cache(
             .not("published_at", "is", null)
             .order("published_at", { ascending: false });
 
-        if (limit) query = query.limit(limit);
-
-        const { data, error } = await query;
         if (error) {
             console.error("Error fetching posts:", error);
             return [];
@@ -88,8 +162,33 @@ const getPublishedBlogPostsCached = unstable_cache(
     { revalidate: 60 }
 );
 
-export async function getPublishedBlogPosts(limit?: number): Promise<BlogPost[]> {
-    return getPublishedBlogPostsCached(limit);
+export async function getPublishedBlogPosts(...args: unknown[]): Promise<BlogPost[]> {
+    const { locale, limit, offset, searchTerm } = parsePublishedPostsArgs(args);
+    let posts = await getAllPublishedBlogPostsCached();
+
+    posts = posts.filter((post) => matchesSearch(post, searchTerm));
+
+    if (locale) {
+        const localeLower = locale.toLowerCase();
+        posts = posts.filter((post) => {
+            const translations = parseTranslations(post.translations);
+            return (
+                post.default_locale?.toLowerCase().startsWith(localeLower) ||
+                Object.keys(translations).some((key) => key.toLowerCase().startsWith(localeLower))
+            );
+        });
+    }
+
+    if (typeof limit !== "number") {
+        return posts.slice(offset);
+    }
+
+    return posts.slice(offset, offset + limit);
+}
+
+export async function getPublishedBlogPostsCount(searchTerm?: string): Promise<number> {
+    const posts = await getAllPublishedBlogPostsCached();
+    return posts.filter((post) => matchesSearch(post, searchTerm)).length;
 }
 
 const getBlogPostBySlugCached = unstable_cache(
@@ -186,8 +285,10 @@ const getPostsByCategoryCached = unstable_cache(
     { revalidate: 60 }
 );
 
-export async function getPostsByCategory(categorySlug: string): Promise<BlogPost[]> {
-    return getPostsByCategoryCached(categorySlug);
+export async function getPostsByCategory(categorySlug: string, limit?: number, offset: number = 0): Promise<BlogPost[]> {
+    const posts = await getPostsByCategoryCached(categorySlug);
+    if (typeof limit !== "number") return posts.slice(offset);
+    return posts.slice(offset, offset + limit);
 }
 
 const getCategoryInfoCached = unstable_cache(
@@ -251,6 +352,74 @@ export async function getBlogPostsByCategory(categorySlug: string, limit?: numbe
 export async function getBlogPostsByCategoryCount(categorySlug: string): Promise<number> {
     const posts = await getPostsByCategory(categorySlug);
     return posts.length;
+}
+
+export function getPostMetadata(post: BlogPost, locale?: string) {
+    const translations = parseTranslations(post.translations);
+    const translated = locale ? translations[locale] : null;
+
+    return {
+        title: translated?.seo_title || translated?.h1 || post.seo_title || post.h1,
+        description: translated?.meta_description || post.meta_description || post.excerpt || "",
+        slug: translated?.slug || post.slug,
+    };
+}
+
+export async function getPostTranslations(post: BlogPost) {
+    const translations = parseTranslations(post.translations);
+    const allTranslations: Record<string, { slug: string }> = {};
+
+    if (post.default_locale && post.slug) {
+        allTranslations[post.default_locale] = { slug: post.slug };
+    }
+
+    Object.entries(translations).forEach(([locale, translation]: [string, any]) => {
+        if (translation?.status === "published" && translation?.slug) {
+            allTranslations[locale] = { slug: translation.slug };
+        }
+    });
+
+    return allTranslations;
+}
+
+export async function getRelatedPosts(postId: string, _tags?: unknown, limit: number = 3): Promise<BlogPost[]> {
+    const siteId = await getSiteId();
+    if (!siteId || !supabaseAdmin) return [];
+
+    const { data: currentCategories } = await supabaseAdmin
+        .from("blog_post_categories")
+        .select("category_id")
+        .eq("post_id", postId);
+
+    const categoryIds = (currentCategories || []).map((entry) => entry.category_id).filter(Boolean);
+
+    if (categoryIds.length > 0) {
+        const { data: relatedLinks } = await supabaseAdmin
+            .from("blog_post_categories")
+            .select("post_id")
+            .in("category_id", categoryIds)
+            .neq("post_id", postId);
+
+        const relatedIds = [...new Set((relatedLinks || []).map((entry) => entry.post_id).filter(Boolean))];
+
+        if (relatedIds.length > 0) {
+            const { data: relatedPosts, error } = await supabaseAdmin
+                .from("blog_posts")
+                .select(BLOG_LISTING_SELECT)
+                .eq("site_id", siteId)
+                .eq("status", "published")
+                .in("id", relatedIds)
+                .order("published_at", { ascending: false })
+                .limit(limit);
+
+            if (!error && relatedPosts) {
+                return relatedPosts.map(normalizePost);
+            }
+        }
+    }
+
+    const recentPosts = await getAllPublishedBlogPostsCached();
+    return recentPosts.filter((post) => post.id !== postId).slice(0, limit);
 }
 
 const getBlogPostsForSitemapCached = unstable_cache(
