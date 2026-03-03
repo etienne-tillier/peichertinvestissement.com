@@ -190,6 +190,33 @@ export async function getPostsByCategory(categorySlug: string): Promise<BlogPost
     return getPostsByCategoryCached(categorySlug);
 }
 
+const getCategoryInfoCached = unstable_cache(
+    async (slug: string): Promise<{ id: string; slug: string; label: string; description?: string | null } | null> => {
+        const siteId = await getSiteId();
+        if (!siteId || !supabaseAdmin) return null;
+
+        const { data, error } = await supabaseAdmin
+            .from("site_categories")
+            .select("id, slug, label, description")
+            .eq("site_id", siteId)
+            .eq("slug", slug)
+            .single();
+
+        if (error) return null;
+        return data;
+    },
+    [`category-info:${SITE_CACHE_KEY}`],
+    { revalidate: 60 }
+);
+
+export async function getCategoryInfo(slug: string) {
+    return getCategoryInfoCached(slug);
+}
+
+export async function getCategoryBySlug(slug: string) {
+    return getCategoryInfo(slug);
+}
+
 const getAllCategoriesCached = unstable_cache(
     async (): Promise<{ id: string; slug: string; label: string }[]> => {
         const siteId = await getSiteId();
@@ -209,6 +236,21 @@ const getAllCategoriesCached = unstable_cache(
 
 export async function getAllCategories(): Promise<{ id: string; slug: string; label: string }[]> {
     return getAllCategoriesCached();
+}
+
+export async function getCategories(): Promise<{ id: string; slug: string; label: string }[]> {
+    return getAllCategories();
+}
+
+export async function getBlogPostsByCategory(categorySlug: string, limit?: number, offset: number = 0): Promise<BlogPost[]> {
+    const posts = await getPostsByCategory(categorySlug);
+    if (typeof limit !== "number") return posts.slice(offset);
+    return posts.slice(offset, offset + limit);
+}
+
+export async function getBlogPostsByCategoryCount(categorySlug: string): Promise<number> {
+    const posts = await getPostsByCategory(categorySlug);
+    return posts.length;
 }
 
 const getBlogPostsForSitemapCached = unstable_cache(
