@@ -2,6 +2,8 @@ import { unstable_cache } from "next/cache";
 import { supabaseAdmin } from "./supabase";
 import { BlogPost } from "@/types";
 
+export type { BlogPost } from "@/types";
+
 const SITE_ID = process.env.SITE_ID?.trim() || null;
 const SITE_DOMAIN = (process.env.SITE_DOMAIN || "").replace(/^https?:\/\//, "");
 const SITE_CACHE_KEY = SITE_ID || SITE_DOMAIN || "unknown-site";
