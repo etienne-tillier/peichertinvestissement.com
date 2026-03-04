@@ -1,5 +1,5 @@
 export interface Site { id: string; domain: string; name: string; }
-export interface Author { id?: string; slug?: string; name: string; avatar_url?: string; bio?: string; }
+export interface Author { id?: string; slug?: string; name: string; full_name?: string; avatar_url?: string; photo_url?: string; bio?: string; role?: string; description?: string; }
 export interface Category { id: string; slug: string; label: string; description?: string; }
 export interface BlogPost {
     id: string; slug: string; h1: string; seo_title?: string; meta_title?: string;
