@@ -161,7 +161,7 @@ const getAllPublishedBlogPostsCached = unstable_cache(
         return (data || []).map(normalizePost);
     },
     [`published-posts:${SITE_CACHE_KEY}`],
-    { revalidate: 60 }
+    { revalidate: 1800 }
 );
 
 export async function getPublishedBlogPosts(...args: unknown[]): Promise<BlogPost[]> {
@@ -243,7 +243,7 @@ const getBlogPostBySlugCached = unstable_cache(
         return normalizePost(fullPost);
     },
     [`blog-post-by-slug:${SITE_CACHE_KEY}`],
-    { revalidate: 60 }
+    { revalidate: 1800 }
 );
 
 export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> {
@@ -284,7 +284,7 @@ const getPostsByCategoryCached = unstable_cache(
         return (posts || []).map(normalizePost);
     },
     [`posts-by-category:${SITE_CACHE_KEY}`],
-    { revalidate: 60 }
+    { revalidate: 1800 }
 );
 
 export async function getPostsByCategory(categorySlug: string, limit?: number, offset: number = 0): Promise<BlogPost[]> {
@@ -309,7 +309,7 @@ const getCategoryInfoCached = unstable_cache(
         return data;
     },
     [`category-info:${SITE_CACHE_KEY}`],
-    { revalidate: 60 }
+    { revalidate: 1800 }
 );
 
 export async function getCategoryInfo(slug: string) {
@@ -334,7 +334,7 @@ const getAllCategoriesCached = unstable_cache(
         return data || [];
     },
     [`all-categories:${SITE_CACHE_KEY}`],
-    { revalidate: 60 }
+    { revalidate: 1800 }
 );
 
 export async function getAllCategories(): Promise<{ id: string; slug: string; label: string }[]> {
@@ -469,7 +469,7 @@ const getBlogPostsForSitemapCached = unstable_cache(
         }, []);
     },
     [`blog-posts-for-sitemap:${SITE_CACHE_KEY}`],
-    { revalidate: 3600 }
+    { revalidate: 21600 }
 );
 
 export async function getBlogPostsForSitemap(lang: string = "fr") {
