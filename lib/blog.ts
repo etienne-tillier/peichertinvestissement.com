@@ -210,7 +210,7 @@ const getSlugToPostIdMapCached = unstable_cache(
             if (post.slug) acc[post.slug] = post.id;
 
             const translations = parseTranslations(post.translations);
-            Object.values(translations).forEach((translation: any) => {
+            Object.values(translations).forEach((translation) => {
                 if (translation?.slug) acc[translation.slug] = post.id;
             });
 
@@ -261,7 +261,7 @@ const getPostsByCategoryCached = unstable_cache(
     async (categorySlug: string): Promise<BlogPost[]> => {
         const posts = await getAllPublishedBlogPostsCached();
         return posts.filter((post) =>
-            (post.categories || []).some((category: any) => category?.slug === categorySlug)
+            (post.categories || []).some((category) => category?.slug === categorySlug)
         );
     },
     [`posts-by-category:${SITE_CACHE_KEY}`],
@@ -375,13 +375,13 @@ export async function getRelatedPosts(postId: string, _tags?: unknown, limit: nu
     }
 
     const currentCategorySlugs = new Set(
-        (currentPost.categories || []).map((category: any) => category?.slug).filter(Boolean)
+        (currentPost.categories || []).map((category) => category?.slug).filter((slug): slug is string => Boolean(slug))
     );
 
     const related = posts
         .filter((post) => post.id !== postId)
         .map((post) => {
-            const overlap = (post.categories || []).reduce((score: number, category: any) => {
+            const overlap = (post.categories || []).reduce((score: number, category) => {
                 if (category?.slug && currentCategorySlugs.has(category.slug)) return score + 1;
                 return score;
             }, 0);
