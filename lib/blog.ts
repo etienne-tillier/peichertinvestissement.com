@@ -193,8 +193,36 @@ export async function getPublishedBlogPostsCount(searchTerm?: string): Promise<n
     return posts.filter((post) => matchesSearch(post, searchTerm)).length;
 }
 
-const getBlogPostBySlugCached = unstable_cache(
-    async (slug: string): Promise<BlogPost | null> => {
+const getSlugToPostIdMapCached = unstable_cache(
+    async (): Promise<Record<string, string>> => {
+        const siteId = await getSiteId();
+        if (!siteId || !supabaseAdmin) return {};
+
+        const { data: posts, error } = await supabaseAdmin
+            .from("blog_posts")
+            .select("id, slug, translations")
+            .eq("site_id", siteId)
+            .eq("status", "published");
+
+        if (error || !posts) return {};
+
+        return posts.reduce((acc, post) => {
+            if (post.slug) acc[post.slug] = post.id;
+
+            const translations = parseTranslations(post.translations);
+            Object.values(translations).forEach((translation: any) => {
+                if (translation?.slug) acc[translation.slug] = post.id;
+            });
+
+            return acc;
+        }, {} as Record<string, string>);
+    },
+    [`slug-to-post-id:${SITE_CACHE_KEY}`],
+    { revalidate: 21600 }
+);
+
+const getBlogPostByIdCached = unstable_cache(
+    async (id: string): Promise<BlogPost | null> => {
         const siteId = await getSiteId();
         if (!siteId || !supabaseAdmin) return null;
 
@@ -202,49 +230,28 @@ const getBlogPostBySlugCached = unstable_cache(
             .from("blog_posts")
             .select(BLOG_DETAIL_SELECT)
             .eq("site_id", siteId)
-            .eq("slug", slug)
-            .single();
-
-        if (!error && post) return normalizePost(post);
-
-        const { data: candidates } = await supabaseAdmin
-            .from("blog_posts")
-            .select("id, slug, translations")
-            .eq("site_id", siteId)
+            .eq("id", id)
             .eq("status", "published")
-            .not("translations", "is", null);
-
-        if (!candidates) return null;
-
-        const matchedCandidate = candidates.find((candidate) => {
-            if (!candidate.translations) return false;
-            let translations = candidate.translations;
-            if (typeof translations === "string") {
-                try {
-                    translations = JSON.parse(translations);
-                } catch {
-                    return false;
-                }
-            }
-
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            return Object.values(translations).some((t: any) => t.slug === slug);
-        });
-
-        if (!matchedCandidate) return null;
-
-        const { data: fullPost } = await supabaseAdmin
-            .from("blog_posts")
-            .select(BLOG_DETAIL_SELECT)
-            .eq("id", matchedCandidate.id)
             .single();
 
-        if (!fullPost) return null;
-        return normalizePost(fullPost);
+        if (error || !post) return null;
+        return normalizePost(post);
+    },
+    [`blog-post-by-id:${SITE_CACHE_KEY}`],
+    { revalidate: 1800 }
+);
+
+const getBlogPostBySlugCached = unstable_cache(
+    async (slug: string): Promise<BlogPost | null> => {
+        const slugToPostId = await getSlugToPostIdMapCached();
+        const postId = slugToPostId[slug];
+        if (!postId) return null;
+        return getBlogPostByIdCached(postId);
     },
     [`blog-post-by-slug:${SITE_CACHE_KEY}`],
     { revalidate: 1800 }
 );
+
 
 export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> {
     return getBlogPostBySlugCached(slug);
@@ -252,40 +259,15 @@ export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> 
 
 const getPostsByCategoryCached = unstable_cache(
     async (categorySlug: string): Promise<BlogPost[]> => {
-        const siteId = await getSiteId();
-        if (!siteId || !supabaseAdmin) return [];
-
-        const { data: category } = await supabaseAdmin
-            .from("site_categories")
-            .select("id")
-            .eq("site_id", siteId)
-            .eq("slug", categorySlug)
-            .single();
-
-        if (!category) return [];
-
-        const { data: postLinks } = await supabaseAdmin
-            .from("blog_post_categories")
-            .select("post_id")
-            .eq("category_id", category.id);
-
-        if (!postLinks || postLinks.length === 0) return [];
-
-        const postIds = postLinks.map((postLink) => postLink.post_id);
-        const { data: posts, error } = await supabaseAdmin
-            .from("blog_posts")
-            .select(BLOG_LISTING_SELECT)
-            .eq("site_id", siteId)
-            .eq("status", "published")
-            .in("id", postIds)
-            .order("published_at", { ascending: false });
-
-        if (error) return [];
-        return (posts || []).map(normalizePost);
+        const posts = await getAllPublishedBlogPostsCached();
+        return posts.filter((post) =>
+            (post.categories || []).some((category: any) => category?.slug === categorySlug)
+        );
     },
     [`posts-by-category:${SITE_CACHE_KEY}`],
     { revalidate: 1800 }
 );
+
 
 export async function getPostsByCategory(categorySlug: string, limit?: number, offset: number = 0): Promise<BlogPost[]> {
     const posts = await getPostsByCategoryCached(categorySlug);
@@ -309,7 +291,7 @@ const getCategoryInfoCached = unstable_cache(
         return data;
     },
     [`category-info:${SITE_CACHE_KEY}`],
-    { revalidate: 1800 }
+    { revalidate: 21600 }
 );
 
 export async function getCategoryInfo(slug: string) {
@@ -334,7 +316,7 @@ const getAllCategoriesCached = unstable_cache(
         return data || [];
     },
     [`all-categories:${SITE_CACHE_KEY}`],
-    { revalidate: 1800 }
+    { revalidate: 21600 }
 );
 
 export async function getAllCategories(): Promise<{ id: string; slug: string; label: string }[]> {
@@ -385,44 +367,39 @@ export async function getPostTranslations(post: BlogPost) {
 }
 
 export async function getRelatedPosts(postId: string, _tags?: unknown, limit: number = 3): Promise<BlogPost[]> {
-    const siteId = await getSiteId();
-    if (!siteId || !supabaseAdmin) return [];
+    const posts = await getAllPublishedBlogPostsCached();
+    const currentPost = posts.find((post) => post.id === postId);
 
-    const { data: currentCategories } = await supabaseAdmin
-        .from("blog_post_categories")
-        .select("category_id")
-        .eq("post_id", postId);
-
-    const categoryIds = (currentCategories || []).map((entry) => entry.category_id).filter(Boolean);
-
-    if (categoryIds.length > 0) {
-        const { data: relatedLinks } = await supabaseAdmin
-            .from("blog_post_categories")
-            .select("post_id")
-            .in("category_id", categoryIds)
-            .neq("post_id", postId);
-
-        const relatedIds = [...new Set((relatedLinks || []).map((entry) => entry.post_id).filter(Boolean))];
-
-        if (relatedIds.length > 0) {
-            const { data: relatedPosts, error } = await supabaseAdmin
-                .from("blog_posts")
-                .select(BLOG_LISTING_SELECT)
-                .eq("site_id", siteId)
-                .eq("status", "published")
-                .in("id", relatedIds)
-                .order("published_at", { ascending: false })
-                .limit(limit);
-
-            if (!error && relatedPosts) {
-                return relatedPosts.map(normalizePost);
-            }
-        }
+    if (!currentPost) {
+        return posts.slice(0, limit);
     }
 
-    const recentPosts = await getAllPublishedBlogPostsCached();
-    return recentPosts.filter((post) => post.id !== postId).slice(0, limit);
+    const currentCategorySlugs = new Set(
+        (currentPost.categories || []).map((category: any) => category?.slug).filter(Boolean)
+    );
+
+    const related = posts
+        .filter((post) => post.id !== postId)
+        .map((post) => {
+            const overlap = (post.categories || []).reduce((score: number, category: any) => {
+                if (category?.slug && currentCategorySlugs.has(category.slug)) return score + 1;
+                return score;
+            }, 0);
+            return { post, overlap };
+        })
+        .filter((entry) => entry.overlap > 0)
+        .sort((a, b) => {
+            if (b.overlap !== a.overlap) return b.overlap - a.overlap;
+            return new Date(b.post.published_at || 0).getTime() - new Date(a.post.published_at || 0).getTime();
+        })
+        .slice(0, limit)
+        .map((entry) => entry.post);
+
+    if (related.length > 0) return related;
+
+    return posts.filter((post) => post.id !== postId).slice(0, limit);
 }
+
 
 const getBlogPostsForSitemapCached = unstable_cache(
     async (lang: string = "fr") => {
