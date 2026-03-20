@@ -161,7 +161,7 @@ const getAllPublishedBlogPostsCached = unstable_cache(
         return (data || []).map(normalizePost);
     },
     [`published-posts:${SITE_CACHE_KEY}`],
-    { revalidate: 1800 }
+    { revalidate: 21600 }
 );
 
 export async function getPublishedBlogPosts(...args: unknown[]): Promise<BlogPost[]> {
@@ -238,7 +238,7 @@ const getBlogPostByIdCached = unstable_cache(
         return normalizePost(post);
     },
     [`blog-post-by-id:${SITE_CACHE_KEY}`],
-    { revalidate: 1800 }
+    { revalidate: 21600 }
 );
 
 const getBlogPostBySlugCached = unstable_cache(
@@ -249,7 +249,7 @@ const getBlogPostBySlugCached = unstable_cache(
         return getBlogPostByIdCached(postId);
     },
     [`blog-post-by-slug:${SITE_CACHE_KEY}`],
-    { revalidate: 1800 }
+    { revalidate: 21600 }
 );
 
 
@@ -265,7 +265,7 @@ const getPostsByCategoryCached = unstable_cache(
         );
     },
     [`posts-by-category:${SITE_CACHE_KEY}`],
-    { revalidate: 1800 }
+    { revalidate: 21600 }
 );
 
 
