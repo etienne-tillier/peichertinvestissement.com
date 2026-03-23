@@ -50,10 +50,17 @@ Les articles viennent EXCLUSIVEMENT de Supabase. Ne JAMAIS générer de faux art
 
 ## 📐 RÈGLES TECHNIQUES
 
-### ISR — OBLIGATOIRE sur chaque page
+### ISR — OBLIGATOIRE (mode egress réduit)
 ```typescript
-export const revalidate = 3600;
+// Home + Blog (listing, article, catégorie)
+export const revalidate = 21600; // 6h
 ```
+
+### Garde-fous egress (OBLIGATOIRE)
+- Ne JAMAIS importer `supabaseAdmin` directement dans `app/**` ou `components/**`
+- Utiliser uniquement les helpers de `lib/blog.ts` (`getPublishedBlogPosts`, `getBlogPostBySlug`, `getPostsByCategory`, `getCategoryBySlug`, etc.)
+- Ne JAMAIS faire de `select("*")` dans du code ajouté
+- Conserver `app/sitemap*.xml/route.ts` inchangés (déjà en `revalidate = 86400`)
 
 ### Blog [slug]/page.tsx — Pattern obligatoire
 ```typescript
@@ -146,8 +153,8 @@ Asymétrie, overlap, animations CSS d'entrée, hover effects, backgrounds textur
 1. ZÉRO page 404 — aucun lien vers page inexistante
 2. AUCUN placeholder (Lorem ipsum, TODO, [À compléter])
 3. Toutes pages obligatoires REMPLIES
-4. Blog fonctionnel (articles OU message "à venir")
+4. Blog fonctionnel (articles OU message **"Aucun article publié pour le moment."**)
 5. **Favicon OBLIGATOIRE** : Créer `app/icon.svg` — logo unique dans l'onglet du navigateur. PREMIÈRE chose vue par l'utilisateur.
 6. `npm run build` : 0 erreur
-7. `revalidate = 3600` sur chaque page
+7. `revalidate = 21600` sur `app/page.tsx`, `app/blog/page.tsx`, `app/blog/[slug]/page.tsx`, `app/blog/categorie/[slug]/page.tsx`
 8. NE JAMAIS modifier les fichiers Core

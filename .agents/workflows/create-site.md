@@ -20,7 +20,17 @@ cd mon-site.com
 ```bash
 cp .env.example .env.local
 ```
-Éditer `.env.local` avec les vraies valeurs Supabase + SITE_DOMAIN.
+Éditer `.env.local` avec les vraies valeurs :
+```env
+SUPABASE_URL=https://fdkxrkrforxzalfaqpzx.supabase.co
+SUPABASE_ANON_KEY=...
+SUPABASE_SERVICE_ROLE_KEY=...
+SITE_DOMAIN=mon-site.com
+NEXT_PUBLIC_SITE_URL=https://mon-site.com
+SITE_ID=<uuid-du-site-dans-la-table-sites>
+```
+
+`SITE_ID` est obligatoire pour éviter un lookup `domain -> id` à chaque cycle et réduire l’egress PostgREST.
 
 ### 3. Ajouter instructions.md
 Copier le `prompt_md` de n8n ou écrire manuellement.
@@ -44,3 +54,7 @@ git add . && git commit -m "Initial site build" && git push origin main
 ```
 
 ### 7. Coolify déploie automatiquement
+
+### 8. Cache Edge (phase egress)
+- Si le site est provisionné via WebSitesManager, la cache rule Cloudflare `/blog*` + `/sitemap*` est appliquée automatiquement.
+- Sinon, ajouter manuellement une cache rule Cloudflare équivalente : Edge TTL `86400`, Browser TTL `3600`.

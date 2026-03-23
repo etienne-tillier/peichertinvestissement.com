@@ -196,9 +196,15 @@ export function BlogCard({ post }: { post: BlogPost }) {
 
 ### ISR Revalidation
 ```typescript
-// OBLIGATOIRE sur CHAQUE page sans exception
-export const revalidate = 3600; // 1h minimum
+// Home + Blog (listing, article, catégorie)
+export const revalidate = 21600; // 6h
 ```
+
+### Garde-fous egress (OBLIGATOIRE)
+- Ne JAMAIS importer `supabaseAdmin` directement dans `app/**` ou `components/**`
+- Utiliser uniquement les helpers de `lib/blog.ts` (`getPublishedBlogPosts`, `getBlogPostBySlug`, `getPostsByCategory`, `getCategoryBySlug`, etc.)
+- Ne JAMAIS ajouter de requête `select("*")` dans du code créé
+- Ne pas modifier les routes sitemap (`app/sitemap*.xml/route.ts`) : elles sont déjà optimisées en `revalidate = 86400`
 
 ### Page Blog `[slug]/page.tsx` — Pattern OBLIGATOIRE
 ```typescript
@@ -384,7 +390,7 @@ CSS variables dans `globals.css`. Couleur dominante + accents vifs > palette tim
 6. **Header + Footer cohérents** : Liens UNIQUEMENT vers des pages existantes
 7. **Contraste lisible** : 4.5:1 minimum partout
 8. **`npm run build` doit passer** : 0 erreur TypeScript, 0 erreur de build
-9. **ISR activé** : `export const revalidate = 3600` sur chaque page
+9. **ISR activé** : `export const revalidate = 21600` sur home + pages blog
 10. **NE JAMAIS modifier les fichiers Core** : Même pas pour "améliorer"
 
 ---
@@ -399,14 +405,14 @@ Avant de terminer, vérifie CHAQUE point :
 - [ ] AUCUN lien du Footer ne mène à une 404
 - [ ] AUCUN lien de la page d'accueil ne mène à une 404
 - [ ] La page `/blog` affiche les articles OU un message "à venir"
-- [ ] La page `/contact` est REMPLIE avec un formulaire fonctionnel
+- [ ] La page `/contact` est REMPLIE (texte + email visible, sans formulaire)
 - [ ] La page `/a-propos` est REMPLIE avec du contenu cohérent
 - [ ] La page `/mentions-legales` est REMPLIE
 - [ ] La page `/politique-confidentialite` est REMPLIE
 - [ ] Les images ont été téléchargées dans `public/images/`
 - [ ] `ReactMarkdown` utilise `MarkdownLink` (pas de `<a>` standard)
 - [ ] `injectDofollowMarker()` est appliqué AVANT le rendu Markdown
-- [ ] `revalidate = 3600` est présent sur toutes les pages
+- [ ] `revalidate = 21600` est présent sur home + pages blog
 - [ ] Les polices sont **distinctives** (pas Inter/Roboto/Arial)
 - [ ] Le design est visuellement INOUBLIABLE
 - [ ] Le contraste texte/fond est suffisant (WCAG AA)

@@ -46,7 +46,10 @@ SITE_DOMAIN=mon-nouveau-site.com
 NEXT_PUBLIC_SITE_URL=https://mon-nouveau-site.com
 NEXT_PUBLIC_SITE_NAME=Mon Nouveau Site
 NEXT_PUBLIC_SITE_DESCRIPTION=Description courte du site
+SITE_ID=<uuid-du-site-dans-la-table-sites>
 ```
+
+`SITE_ID` est obligatoire pour éviter le lookup `domain -> id` et réduire l’egress PostgREST.
 
 ### 4. Ajouter le fichier instructions.md
 Copier le `prompt_md` généré par n8n (ou écrire manuellement) dans :
@@ -86,6 +89,10 @@ git push origin main
 ### 8. Déployer sur Coolify
 Si Coolify est configuré avec auto-deploy sur `main`, c'est automatique.
 Sinon, ajouter le repo manuellement dans Coolify avec les variables d'environnement de l'étape 3.
+
+### 9. Cache Edge (phase egress)
+- Si le domaine a été provisionné via WebSitesManager, la cache rule Cloudflare `/blog*` + `/sitemap*` est déjà posée.
+- Sinon, poser une cache rule équivalente : Edge TTL `86400`, Browser TTL `3600`.
 
 ## Temps estimé
 - Étapes 1-5 : ~3 minutes

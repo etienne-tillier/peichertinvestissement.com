@@ -61,9 +61,15 @@ Tu DOIS créer ou modifier **uniquement** ces fichiers :
 
 ### ISR Revalidation
 ```typescript
-// OBLIGATOIRE sur CHAQUE page sans exception
-export const revalidate = 3600; // 1h minimum
+// Home + Blog (listing, article, catégorie)
+export const revalidate = 21600; // 6h
 ```
+
+### Garde-fous egress (OBLIGATOIRE)
+- Ne JAMAIS importer `supabaseAdmin` directement dans `app/**` ou `components/**`
+- Utiliser uniquement les helpers de `lib/blog.ts` (`getPublishedBlogPosts`, `getBlogPostBySlug`, `getPostsByCategory`, `getCategoryBySlug`, etc.)
+- Ne JAMAIS ajouter de requête `select("*")` dans du code créé
+- Ne pas modifier les routes sitemap (`app/sitemap*.xml/route.ts`) : elles sont déjà optimisées en `revalidate = 86400`
 
 ### Page Blog `[slug]/page.tsx` — Pattern OBLIGATOIRE
 ```typescript
@@ -276,7 +282,7 @@ Créer de l'atmosphère et de la profondeur plutôt que des fonds unis par défa
 5. **Header + Footer sur TOUTES les pages** : Via le `layout.tsx`
 6. **Contraste lisible** : Ratio 4.5:1 minimum partout
 7. **`npm run build` doit passer** : 0 erreur TypeScript, 0 erreur de build
-8. **ISR activé partout** : `export const revalidate = 3600` sur chaque page
+8. **ISR activé** : `export const revalidate = 21600` sur home + pages blog
 
 ---
 
@@ -291,7 +297,7 @@ Avant de terminer, vérifie :
 - [ ] Les images ont été téléchargées dans `public/images/`
 - [ ] `ReactMarkdown` utilise `MarkdownLink` (pas de `<a>` standard)
 - [ ] `injectDofollowMarker()` est appliqué AVANT le rendu Markdown
-- [ ] `revalidate = 3600` est présent sur toutes les pages
+- [ ] `revalidate = 21600` est présent sur home + pages blog
 - [ ] La palette de couleurs est UNIQUE et adaptée à la thématique
 - [ ] Les polices Google sont **distinctives** (pas Inter/Roboto/Arial)
 - [ ] Le design est visuellement INOUBLIABLE et spécifique à la thématique
