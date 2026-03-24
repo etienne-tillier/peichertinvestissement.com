@@ -2,6 +2,7 @@
 
 ## Objectif
 Tu construis un site web **distinctif, production-grade et visuellement mémorable** à partir de ce template. Le fichier `instructions.md` contient le brief thématique. Lis-le intégralement avant de commencer.
+Un prompt prêt à copier/coller est aussi disponible dans `PROMPT_READY.md`.
 
 ## ⛔ FICHIERS INTERDITS — NE JAMAIS MODIFIER, NE PAS OUVRIR, NE PAS RECRÉER
 ```
