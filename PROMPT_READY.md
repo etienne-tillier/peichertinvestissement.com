@@ -17,6 +17,8 @@ Contraintes non négociables:
 - Aucune modification des fichiers Core interdits
 - Blog 100% Supabase (aucun faux article)
 - ISR egress-safe (revalidate conforme)
+- Toute page additionnelle liée doit exister et être remplie (sinon supprimer le lien)
+- Tout lien du même domaine doit être interne et dofollow
 - npm run build sans erreur
 
 Action attendue:

@@ -39,6 +39,8 @@ Les articles viennent EXCLUSIVEMENT de Supabase. Ne JAMAIS générer de faux art
 **Aucune page du site ne doit JAMAIS afficher une 404.**
 - Chaque lien du Header/Footer DOIT pointer vers une page existante
 - Ne JAMAIS créer de lien vers une page non créée
+- Si tu ajoutes une page "extra" (outil, carte interactive, simulateur, guide dédié, etc.), la route doit être créée et remplie avec un vrai contenu utile
+- Si une page n'est pas implémentée, supprimer/masquer tous les liens qui pointent vers elle
 - Les pages thématiques : les créer remplies OU redirect vers `/blog?category=xxx`
 - `/blog` sans articles → "Aucun article publié pour le moment."
 - `/blog/[slug]` article inexistant → `notFound()` (pas page blanche)
@@ -62,6 +64,11 @@ export const revalidate = 21600; // 6h
 - Utiliser uniquement les helpers de `lib/blog.ts` (`getPublishedBlogPosts`, `getBlogPostBySlug`, `getPostsByCategory`, `getCategoryBySlug`, etc.)
 - Ne JAMAIS faire de `select("*")` dans du code ajouté
 - Conserver `app/sitemap*.xml/route.ts` inchangés (déjà en `revalidate = 86400`)
+
+### Liens internes et dofollow (OBLIGATOIRE)
+- Tout lien pointant vers le même domaine que `SITE_DOMAIN`/`NEXT_PUBLIC_SITE_URL` est un lien interne
+- Un lien interne ne doit JAMAIS être en `nofollow`
+- Dans le rendu markdown, utiliser `MarkdownLink` + `injectDofollowMarker()` comme défini ci-dessous
 
 ### Blog [slug]/page.tsx — Pattern obligatoire
 ```typescript

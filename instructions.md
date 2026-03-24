@@ -62,6 +62,9 @@ L'agent doit lire d'abord `CLAUDE.md`, puis ce fichier.
 - Pas de `select("*")` ajouté.
 - Pas de faux articles.
 - Aucune page 404.
+- Toute page additionnelle liée (outil, carte, simulateur, etc.) doit être implémentée et réellement remplie.
+- Si une page n'existe pas, aucun lien ne doit pointer vers elle.
+- Tout lien vers le même domaine doit être traité comme lien interne dofollow.
 - `npm run build` doit passer.
 
 ## 8) Données légales à injecter
@@ -92,6 +95,8 @@ Contraintes non négociables:
 - Aucune modification des fichiers Core interdits
 - Blog 100% Supabase (aucun faux article)
 - ISR egress-safe (revalidate conforme)
+- Toute page additionnelle liée doit exister et être remplie (sinon supprimer le lien)
+- Tout lien du même domaine doit être interne et dofollow
 - npm run build sans erreur
 
 Action attendue:
