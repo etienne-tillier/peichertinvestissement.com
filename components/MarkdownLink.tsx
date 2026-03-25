@@ -40,8 +40,29 @@ const parseHttpUrl = (value: string) => {
     return null;
 };
 
+const extractDomainHref = (value: string): string | null => {
+    const trimmed = value.trim();
+    if (!trimmed) return null;
+    if (/^https?:\/\//i.test(trimmed)) return trimmed;
+    if (/^(?:www\.)?[a-z0-9][a-z0-9.-]+\.[a-z]{2,}(?:\/[^\s<)]*)?$/i.test(trimmed)) {
+        return `https://${trimmed}`;
+    }
+    return null;
+};
+
 export const MarkdownLink = ({ href, children, ...props }: LinkProps) => {
-    if (!href) return <a {...props}>{children}</a>;
+    if (!href) {
+        const text = typeof children === "string"
+            ? children
+            : Array.isArray(children)
+                ? children.map((child) => (typeof child === "string" ? child : "")).join(" ")
+                : "";
+        const fallbackHref = extractDomainHref(text);
+        if (fallbackHref) {
+            return <a href={fallbackHref} target="_blank" rel="noopener noreferrer" {...props}>{children}</a>;
+        }
+        return <a {...props}>{children}</a>;
+    }
 
     const dofollowMarker = "{dofollow}";
     const dofollowMarkerEncoded = "%7Bdofollow%7D";

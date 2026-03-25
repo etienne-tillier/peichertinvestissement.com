@@ -28,6 +28,14 @@ export function injectDofollowMarker(markdown: string): string {
         },
     );
 
+    output = output.replace(
+        /<a>\s*((?:https?:\/\/)?(?:www\.)?[a-z0-9][a-z0-9.-]+\.[a-z]{2,}(?:\/[^\s<)]*)?)\s*<\/a>\s*(?:\{dofollow\}|\{do follow\}|dofollow|do follow|do-follow)?/gim,
+        (_match, rawUrl) => {
+            const absoluteUrl = /^https?:\/\//i.test(rawUrl) ? rawUrl : `https://${rawUrl}`;
+            return `[${rawUrl}](${addDofollowParam(absoluteUrl)})`;
+        },
+    );
+
     output = output.replace(markerPattern, "");
     return output;
 }
