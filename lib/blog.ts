@@ -193,31 +193,42 @@ export async function getPublishedBlogPostsCount(searchTerm?: string): Promise<n
     return posts.filter((post) => matchesSearch(post, searchTerm)).length;
 }
 
-const getSlugToPostIdMapCached = unstable_cache(
-    async (): Promise<Record<string, string>> => {
+const getBlogPostIdBySlugCached = unstable_cache(
+    async (slug: string): Promise<string | null> => {
         const siteId = await getSiteId();
-        if (!siteId || !supabaseAdmin) return {};
+        if (!siteId || !supabaseAdmin) return null;
+
+        const { data: directPost, error: directError } = await supabaseAdmin
+            .from("blog_posts")
+            .select("id")
+            .eq("site_id", siteId)
+            .eq("status", "published")
+            .eq("slug", slug)
+            .maybeSingle();
+
+        if (directError) return null;
+        if (directPost?.id) return directPost.id;
 
         const { data: posts, error } = await supabaseAdmin
             .from("blog_posts")
-            .select("id, slug, translations")
+            .select("id, translations")
             .eq("site_id", siteId)
             .eq("status", "published");
 
-        if (error || !posts) return {};
+        if (error || !posts) return null;
 
-        return posts.reduce((acc, post) => {
-            if (post.slug) acc[post.slug] = post.id;
-
+        for (const post of posts) {
             const translations = parseTranslations(post.translations);
-            Object.values(translations).forEach((translation) => {
-                if (translation?.slug) acc[translation.slug] = post.id;
-            });
+            const hasMatchingTranslation = Object.values(translations).some(
+                (translation) => translation?.slug === slug
+            );
 
-            return acc;
-        }, {} as Record<string, string>);
+            if (hasMatchingTranslation) return post.id;
+        }
+
+        return null;
     },
-    [`slug-to-post-id:${SITE_CACHE_KEY}`],
+    [`blog-post-id-by-slug:${SITE_CACHE_KEY}`],
     { revalidate: 21600 }
 );
 
@@ -243,15 +254,13 @@ const getBlogPostByIdCached = unstable_cache(
 
 const getBlogPostBySlugCached = unstable_cache(
     async (slug: string): Promise<BlogPost | null> => {
-        const slugToPostId = await getSlugToPostIdMapCached();
-        const postId = slugToPostId[slug];
+        const postId = await getBlogPostIdBySlugCached(slug);
         if (!postId) return null;
         return getBlogPostByIdCached(postId);
     },
     [`blog-post-by-slug:${SITE_CACHE_KEY}`],
     { revalidate: 21600 }
 );
-
 
 export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> {
     return getBlogPostBySlugCached(slug);
