@@ -193,10 +193,30 @@ export async function getPublishedBlogPostsCount(searchTerm?: string): Promise<n
     return posts.filter((post) => matchesSearch(post, searchTerm)).length;
 }
 
+const toLegacyEncodedSlug = (slug: string): string | null => {
+    if (!slug) return null;
+
+    const decodedSlug = (() => {
+        try {
+            return decodeURIComponent(slug);
+        } catch {
+            return slug;
+        }
+    })();
+
+    const encodedSlug = encodeURIComponent(decodedSlug)
+        .toLowerCase()
+        .replace(/%/g, "");
+
+    if (!encodedSlug || encodedSlug === slug.toLowerCase()) return null;
+    return encodedSlug;
+};
+
 const getBlogPostIdBySlugCached = unstable_cache(
     async (slug: string): Promise<string | null> => {
         const siteId = await getSiteId();
         if (!siteId || !supabaseAdmin) return null;
+        const legacyEncodedSlug = toLegacyEncodedSlug(slug);
 
         const { data: directPost, error: directError } = await supabaseAdmin
             .from("blog_posts")
@@ -209,21 +229,37 @@ const getBlogPostIdBySlugCached = unstable_cache(
         if (directError) return null;
         if (directPost?.id) return directPost.id;
 
-        const { data: posts, error } = await supabaseAdmin
-            .from("blog_posts")
-            .select("id, translations")
-            .eq("site_id", siteId)
-            .eq("status", "published");
+        if (legacyEncodedSlug) {
+            const { data: encodedPost, error: encodedError } = await supabaseAdmin
+                .from("blog_posts")
+                .select("id")
+                .eq("site_id", siteId)
+                .eq("status", "published")
+                .eq("slug", legacyEncodedSlug)
+                .maybeSingle();
 
-        if (error || !posts) return null;
+            if (encodedError) return null;
+            if (encodedPost?.id) return encodedPost.id;
+        }
 
-        for (const post of posts) {
-            const translations = parseTranslations(post.translations);
-            const hasMatchingTranslation = Object.values(translations).some(
-                (translation) => translation?.slug === slug
+        const fallbackCandidates = legacyEncodedSlug
+            ? [slug, legacyEncodedSlug]
+            : [slug];
+
+        for (const candidateSlug of fallbackCandidates) {
+            const { data: fallbackPostId, error: fallbackError } = await supabaseAdmin.rpc(
+                "find_published_blog_post_id_by_any_slug",
+                { p_site_id: siteId, p_slug: candidateSlug }
             );
 
-            if (hasMatchingTranslation) return post.id;
+            if (fallbackError) {
+                console.error("RPC find_published_blog_post_id_by_any_slug failed", fallbackError);
+                continue;
+            }
+
+            if (typeof fallbackPostId === "string" && fallbackPostId.length > 0) {
+                return fallbackPostId;
+            }
         }
 
         return null;

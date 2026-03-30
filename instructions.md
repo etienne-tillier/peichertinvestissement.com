@@ -37,6 +37,7 @@ L'agent doit lire d'abord `CLAUDE.md`, puis ce fichier.
 - Concurrents de référence:
 - Règles de maillage interne spécifiques:
 - URLs legacy à rediriger (si applicable):
+  - Si l'URL contient des caractères encodés (`%C3%A9`, etc.), la décoder d'abord puis slugifier proprement (ne jamais produire des slugs de type `c3a9`/`c3a8`).
 
 ## 5) Direction artistique
 
@@ -65,6 +66,7 @@ L'agent doit lire d'abord `CLAUDE.md`, puis ce fichier.
 - Toute page additionnelle liée (outil, carte, simulateur, etc.) doit être implémentée et réellement remplie.
 - Si une page n'existe pas, aucun lien ne doit pointer vers elle.
 - Tout lien vers le même domaine doit être traité comme lien interne dofollow.
+- Les redirections legacy doivent pointer vers des slugs décodés/normalisés (jamais vers des slugs encodés type `c3a9`).
 - `npm run build` doit passer.
 
 ## 8) Données légales à injecter
@@ -97,6 +99,7 @@ Contraintes non négociables:
 - ISR egress-safe (revalidate conforme)
 - Toute page additionnelle liée doit exister et être remplie (sinon supprimer le lien)
 - Tout lien du même domaine doit être interne et dofollow
+- Les redirections legacy doivent utiliser des slugs décodés/normalisés (pas de `c3a9`, `c3a8`, etc.)
 - npm run build sans erreur
 
 Action attendue:
