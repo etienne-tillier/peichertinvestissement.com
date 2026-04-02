@@ -3,6 +3,8 @@ import { AnchorHTMLAttributes, DetailedHTMLProps } from "react";
 
 type LinkProps = DetailedHTMLProps<AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>;
 const DOFOLLOW_TITLE_MARKER = "__DOFOLLOW__";
+const isDomainLikeText = (value: string) =>
+    /^(?:https?:\/\/)?(?:www\.)?[a-z0-9][a-z0-9.-]+\.[a-z]{2,}(?:\/)?$/i.test(value.trim());
 
 const normalizeHostname = (value: string) => value.trim().toLowerCase().replace(/^www\./, "");
 
@@ -107,6 +109,10 @@ export const MarkdownLink = ({ href, children, title, ...props }: LinkProps) => 
     const parsedHref = parseHttpUrl(cleanHref);
     const siteHostname = resolveSiteHostname();
     const hrefHostname = parsedHref ? normalizeHostname(parsedHref.hostname) : "";
+    const fallbackHostname = fallbackHref ? normalizeHostname(parseHttpUrl(fallbackHref)?.hostname || "") : "";
+    const domainLabelPointsToSameHost = Boolean(
+        isDomainLikeText(text) && hrefHostname && fallbackHostname && hrefHostname === fallbackHostname,
+    );
     const isInternalAbsolute = Boolean(siteHostname && hrefHostname && hrefHostname === siteHostname);
 
     if (isInternalAbsolute && parsedHref) {
@@ -116,7 +122,13 @@ export const MarkdownLink = ({ href, children, title, ...props }: LinkProps) => 
     }
 
     return (
-        <a href={cleanHref} target="_blank" rel={hasDofollowMarker ? "noopener noreferrer" : "nofollow noopener noreferrer"} title={cleanTitle} {...props}>
+        <a
+            href={cleanHref}
+            target="_blank"
+            rel={hasDofollowMarker || domainLabelPointsToSameHost ? "noopener noreferrer" : "nofollow noopener noreferrer"}
+            title={cleanTitle}
+            {...props}
+        >
             {children}
         </a>
     );
