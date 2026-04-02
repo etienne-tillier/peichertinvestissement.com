@@ -36,7 +36,6 @@ export function injectDofollowMarker(markdown: string): string {
     );
 
     output = output
-        .replace(/\{dofollow\}|\{do follow\}/gi, "")
-        .replace(/\bdo(?:\s|-)?follow\b/gi, "");
+        .replace(/\{dofollow\}|\{do follow\}/gi, "");
     return output;
 }
