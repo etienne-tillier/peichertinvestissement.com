@@ -6,7 +6,8 @@ export type { BlogPost } from "@/types";
 
 const SITE_ID = process.env.SITE_ID?.trim() || null;
 const SITE_DOMAIN = (process.env.SITE_DOMAIN || "").replace(/^https?:\/\//, "");
-const SITE_CACHE_KEY = SITE_ID || SITE_DOMAIN || "unknown-site";
+const CONTENT_CACHE_VERSION = process.env.CONTENT_CACHE_VERSION?.trim() || "v2";
+const SITE_CACHE_KEY = `${SITE_ID || SITE_DOMAIN || "unknown-site"}:${CONTENT_CACHE_VERSION}`;
 export const POSTS_PER_PAGE = 12;
 
 const BLOG_LISTING_SELECT = `
