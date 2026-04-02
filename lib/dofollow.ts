@@ -1,6 +1,4 @@
 export function injectDofollowMarker(markdown: string): string {
-    const markerPattern = /(?:\{dofollow\}|\{do follow\}|dofollow|do follow|do-follow)/gi;
-
     const addDofollowParam = (rawUrl: string): string => {
         try {
             const parsed = new URL(rawUrl);
@@ -36,6 +34,8 @@ export function injectDofollowMarker(markdown: string): string {
         },
     );
 
-    output = output.replace(markerPattern, "");
+    output = output
+        .replace(/\{dofollow\}|\{do follow\}/gi, "")
+        .replace(/\bdo(?:\s|-)?follow\b/gi, "");
     return output;
 }

@@ -50,14 +50,21 @@ const extractDomainHref = (value: string): string | null => {
     return null;
 };
 
+const extractTextFromChildren = (children: unknown): string => {
+    if (typeof children === "string") return children;
+    if (typeof children === "number") return String(children);
+    if (Array.isArray(children)) return children.map((child) => extractTextFromChildren(child)).join(" ");
+    if (children && typeof children === "object" && "props" in (children as Record<string, unknown>)) {
+        const props = (children as { props?: { children?: unknown } }).props;
+        return extractTextFromChildren(props?.children);
+    }
+    return "";
+};
+
 export const MarkdownLink = ({ href, children, ...props }: LinkProps) => {
+    const text = extractTextFromChildren(children);
+    const fallbackHref = extractDomainHref(text);
     if (!href) {
-        const text = typeof children === "string"
-            ? children
-            : Array.isArray(children)
-                ? children.map((child) => (typeof child === "string" ? child : "")).join(" ")
-                : "";
-        const fallbackHref = extractDomainHref(text);
         if (fallbackHref) {
             return <a href={fallbackHref} target="_blank" rel="noopener noreferrer" {...props}>{children}</a>;
         }
@@ -73,6 +80,14 @@ export const MarkdownLink = ({ href, children, ...props }: LinkProps) => {
     if (cleanHref.startsWith("http://") || cleanHref.startsWith("https://")) {
         try { const parsed = new URL(cleanHref); parsed.searchParams.delete("__dofollow"); cleanHref = parsed.toString(); } catch { cleanHref = cleanHref.replace(/[?&]__dofollow=1/g, ""); }
     } else { cleanHref = cleanHref.replace(/[?&]__dofollow=1/g, ""); }
+    cleanHref = cleanHref.replace(/^[?&]?__dofollow=1$/i, "").replace(/[?&]$/g, "").trim();
+
+    if (!cleanHref && fallbackHref) {
+        cleanHref = fallbackHref;
+    }
+    if (!cleanHref) {
+        return <span {...props}>{children}</span>;
+    }
 
     const isHttpAbsolute = cleanHref.startsWith("http://")
         || cleanHref.startsWith("https://")
