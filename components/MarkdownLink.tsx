@@ -2,6 +2,7 @@ import Link from "next/link";
 import { AnchorHTMLAttributes, DetailedHTMLProps } from "react";
 
 type LinkProps = DetailedHTMLProps<AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>;
+const DOFOLLOW_TITLE_MARKER = "__DOFOLLOW__";
 
 const normalizeHostname = (value: string) => value.trim().toLowerCase().replace(/^www\./, "");
 
@@ -61,20 +62,22 @@ const extractTextFromChildren = (children: unknown): string => {
     return "";
 };
 
-export const MarkdownLink = ({ href, children, ...props }: LinkProps) => {
+export const MarkdownLink = ({ href, children, title, ...props }: LinkProps) => {
     const text = extractTextFromChildren(children);
     const fallbackHref = extractDomainHref(text);
+    const rawTitle = typeof title === "string" ? title : "";
+    const cleanTitle = rawTitle && rawTitle !== DOFOLLOW_TITLE_MARKER ? rawTitle : undefined;
     if (!href) {
         if (fallbackHref) {
-            return <a href={fallbackHref} target="_blank" rel="noopener noreferrer" {...props}>{children}</a>;
+            return <a href={fallbackHref} target="_blank" rel="noopener noreferrer" title={cleanTitle} {...props}>{children}</a>;
         }
-        return <a {...props}>{children}</a>;
+        return <a title={cleanTitle} {...props}>{children}</a>;
     }
 
     const dofollowMarker = "{dofollow}";
     const dofollowMarkerEncoded = "%7Bdofollow%7D";
     const dofollowParam = "__dofollow=1";
-    const hasDofollowMarker = href.includes(dofollowMarker) || href.toLowerCase().includes(dofollowMarkerEncoded) || href.includes(dofollowParam);
+    const hasDofollowMarker = href.includes(dofollowMarker) || href.toLowerCase().includes(dofollowMarkerEncoded) || href.includes(dofollowParam) || rawTitle === DOFOLLOW_TITLE_MARKER;
 
     let cleanHref = href.replace(dofollowMarker, "").replace(/%7Bdofollow%7D/gi, "");
     if (cleanHref.startsWith("http://") || cleanHref.startsWith("https://")) {
@@ -95,10 +98,10 @@ export const MarkdownLink = ({ href, children, ...props }: LinkProps) => {
 
     if (!isHttpAbsolute) {
         if (cleanHref.startsWith("mailto:") || cleanHref.startsWith("tel:")) {
-            return <a href={cleanHref} {...props}>{children}</a>;
+            return <a href={cleanHref} title={cleanTitle} {...props}>{children}</a>;
         }
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        return <Link href={cleanHref} {...(props as any)}>{children}</Link>;
+        return <Link href={cleanHref} title={cleanTitle} {...(props as any)}>{children}</Link>;
     }
 
     const parsedHref = parseHttpUrl(cleanHref);
@@ -109,11 +112,11 @@ export const MarkdownLink = ({ href, children, ...props }: LinkProps) => {
     if (isInternalAbsolute && parsedHref) {
         const internalHref = `${parsedHref.pathname}${parsedHref.search}${parsedHref.hash}`;
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        return <Link href={internalHref || "/"} {...(props as any)}>{children}</Link>;
+        return <Link href={internalHref || "/"} title={cleanTitle} {...(props as any)}>{children}</Link>;
     }
 
     return (
-        <a href={cleanHref} target="_blank" rel={hasDofollowMarker ? "noopener noreferrer" : "nofollow noopener noreferrer"} {...props}>
+        <a href={cleanHref} target="_blank" rel={hasDofollowMarker ? "noopener noreferrer" : "nofollow noopener noreferrer"} title={cleanTitle} {...props}>
             {children}
         </a>
     );
