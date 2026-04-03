@@ -4,6 +4,7 @@ import { AnchorHTMLAttributes, DetailedHTMLProps } from "react";
 type LinkProps = DetailedHTMLProps<AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>;
 const DOFOLLOW_TITLE_MARKER = "__DOFOLLOW__";
 const isDofollowTitle = (value: string) => /\bdofollow\b/i.test(value.trim());
+const isLegacyDofollowTitle = (value: string) => /^_+$/.test(value.trim());
 const isDomainLikeText = (value: string) =>
     /^(?:https?:\/\/)?(?:www\.)?[a-z0-9][a-z0-9.-]+\.[a-z]{2,}(?:\/)?$/i.test(value.trim());
 
@@ -87,14 +88,34 @@ export const MarkdownLink = ({ href, children, title, ...props }: LinkProps) => 
         href.includes(dofollowMarker) ||
         href.toLowerCase().includes(dofollowMarkerEncoded) ||
         href.includes(dofollowParam) ||
+        /[?&]__=1(?=&|$)/i.test(href) ||
         rawTitle === DOFOLLOW_TITLE_MARKER ||
-        isDofollowTitle(rawTitle);
+        isDofollowTitle(rawTitle) ||
+        isLegacyDofollowTitle(rawTitle);
 
     let cleanHref = href.replace(dofollowMarker, "").replace(/%7Bdofollow%7D/gi, "");
     if (cleanHref.startsWith("http://") || cleanHref.startsWith("https://")) {
-        try { const parsed = new URL(cleanHref); parsed.searchParams.delete("__dofollow"); cleanHref = parsed.toString(); } catch { cleanHref = cleanHref.replace(/[?&]__dofollow=1/g, ""); }
-    } else { cleanHref = cleanHref.replace(/[?&]__dofollow=1/g, ""); }
-    cleanHref = cleanHref.replace(/^[?&]?__dofollow=1$/i, "").replace(/[?&]$/g, "").trim();
+        try {
+            const parsed = new URL(cleanHref);
+            parsed.searchParams.delete("__dofollow");
+            parsed.searchParams.delete("__");
+            cleanHref = parsed.toString();
+        } catch {
+            cleanHref = cleanHref
+                .replace(/[?&]__dofollow=1(?=&|$)/g, "")
+                .replace(/[?&]__=1(?=&|$)/g, "");
+        }
+    } else {
+        cleanHref = cleanHref
+            .replace(/[?&]__dofollow=1(?=&|$)/g, "")
+            .replace(/[?&]__=1(?=&|$)/g, "");
+    }
+    cleanHref = cleanHref
+        .replace(/^[?&]?__dofollow=1$/i, "")
+        .replace(/^[?&]?__=1$/i, "")
+        .replace(/\?&/g, "?")
+        .replace(/[?&]$/g, "")
+        .trim();
 
     if (!cleanHref && fallbackHref) {
         cleanHref = fallbackHref;
