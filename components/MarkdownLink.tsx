@@ -3,6 +3,7 @@ import { AnchorHTMLAttributes, DetailedHTMLProps } from "react";
 
 type LinkProps = DetailedHTMLProps<AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>;
 const DOFOLLOW_TITLE_MARKER = "__DOFOLLOW__";
+const isDofollowTitle = (value: string) => /\bdofollow\b/i.test(value.trim());
 const isDomainLikeText = (value: string) =>
     /^(?:https?:\/\/)?(?:www\.)?[a-z0-9][a-z0-9.-]+\.[a-z]{2,}(?:\/)?$/i.test(value.trim());
 
@@ -68,7 +69,10 @@ export const MarkdownLink = ({ href, children, title, ...props }: LinkProps) => 
     const text = extractTextFromChildren(children);
     const fallbackHref = extractDomainHref(text);
     const rawTitle = typeof title === "string" ? title : "";
-    const cleanTitle = rawTitle && rawTitle !== DOFOLLOW_TITLE_MARKER ? rawTitle : undefined;
+    const cleanTitle =
+        rawTitle && rawTitle !== DOFOLLOW_TITLE_MARKER && !isDofollowTitle(rawTitle)
+            ? rawTitle
+            : undefined;
     if (!href) {
         if (fallbackHref) {
             return <a href={fallbackHref} target="_blank" rel="noopener noreferrer" title={cleanTitle} {...props}>{children}</a>;
@@ -79,7 +83,12 @@ export const MarkdownLink = ({ href, children, title, ...props }: LinkProps) => 
     const dofollowMarker = "{dofollow}";
     const dofollowMarkerEncoded = "%7Bdofollow%7D";
     const dofollowParam = "__dofollow=1";
-    const hasDofollowMarker = href.includes(dofollowMarker) || href.toLowerCase().includes(dofollowMarkerEncoded) || href.includes(dofollowParam) || rawTitle === DOFOLLOW_TITLE_MARKER;
+    const hasDofollowMarker =
+        href.includes(dofollowMarker) ||
+        href.toLowerCase().includes(dofollowMarkerEncoded) ||
+        href.includes(dofollowParam) ||
+        rawTitle === DOFOLLOW_TITLE_MARKER ||
+        isDofollowTitle(rawTitle);
 
     let cleanHref = href.replace(dofollowMarker, "").replace(/%7Bdofollow%7D/gi, "");
     if (cleanHref.startsWith("http://") || cleanHref.startsWith("https://")) {
