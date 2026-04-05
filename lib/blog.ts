@@ -344,9 +344,11 @@ const getBlogPostIdBySlugCached = unstable_cache(
             if (encodedPost?.id) return encodedPost.id;
         }
 
-        const fallbackCandidates = legacyEncodedSlug
-            ? [slug, legacyEncodedSlug]
-            : [slug];
+        const fallbackCandidates = [
+            slug,
+            ...(legacyEncodedSlug ? [legacyEncodedSlug] : []),
+            ...(slug.startsWith("blog-") ? [slug.replace(/^blog-/, "")] : [`blog-${slug}`]),
+        ];
 
         for (const candidateSlug of fallbackCandidates) {
             const { data: fallbackPostId, error: fallbackError } = await supabaseAdmin.rpc(
