@@ -19,6 +19,8 @@ Contraintes non négociables:
 - ISR egress-safe (revalidate conforme)
 - Toute page additionnelle liée doit exister et être remplie (sinon supprimer le lien)
 - Tout lien du même domaine doit être interne et dofollow
+- Si une image de référence contient un overlay (timestamp YouTube en bas à droite, icône play, watermark, logo tiers, texte incrusté), il doit être supprimé dans le rendu final.
+- Les miniatures finales doivent être "clean": aucun timer vidéo (`12:34`), aucun badge de plateforme, aucun élément parasite copié depuis la référence.
 - npm run build sans erreur
 
 Action attendue:
