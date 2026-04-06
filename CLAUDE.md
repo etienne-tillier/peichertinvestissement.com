@@ -166,3 +166,8 @@ Asymétrie, overlap, animations CSS d'entrée, hover effects, backgrounds textur
 6. `npm run build` : 0 erreur
 7. `revalidate = 21600` sur `app/page.tsx`, `app/blog/page.tsx`, `app/blog/[slug]/page.tsx`, `app/blog/categorie/[slug]/page.tsx`
 8. NE JAMAIS modifier les fichiers Core
+9. **PUSH OBLIGATOIRE** : Une fois le build validé (exit 0), exécuter :
+   ```bash
+   git add -A && git commit -m "feat: implémentation complète [NOM_DU_SITE]" && git push
+   ```
+   Ne jamais terminer sans avoir poussé le code.

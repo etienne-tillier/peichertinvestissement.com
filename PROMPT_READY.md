@@ -28,7 +28,8 @@ Action attendue:
 - Utiliser les assets fournis dans instructions.md
 
 À la fin:
-- Exécuter npm run build
+- Exécuter npm run build (doit passer sans erreur)
+- Si le build passe : git add -A && git commit -m "feat: implémentation complète [NOM_DU_SITE]" && git push
 - Fournir la liste des fichiers modifiés
 - Expliquer brièvement les choix design et SEO effectués
 ```

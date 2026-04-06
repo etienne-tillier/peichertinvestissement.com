@@ -80,10 +80,9 @@ L'agent va :
 npm run build
 ```
 Si le build passe :
+// turbo
 ```bash
-git add .
-git commit -m "Initial site build"
-git push origin main
+git add -A && git commit -m "feat: implémentation complète" && git push
 ```
 
 ### 8. Déployer sur Coolify

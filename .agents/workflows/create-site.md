@@ -49,8 +49,9 @@ npm install
 ```bash
 npm run build
 ```
+// turbo
 ```bash
-git add . && git commit -m "Initial site build" && git push origin main
+git add -A && git commit -m "feat: implémentation complète" && git push
 ```
 
 ### 7. Coolify déploie automatiquement
