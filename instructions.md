@@ -67,8 +67,6 @@ L'agent doit lire d'abord `CLAUDE.md`, puis ce fichier.
 - Si une page n'existe pas, aucun lien ne doit pointer vers elle.
 - Tout lien vers le même domaine doit être traité comme lien interne dofollow.
 - Les redirections legacy doivent pointer vers des slugs décodés/normalisés (jamais vers des slugs encodés type `c3a9`).
-- Toute image/miniature générée à partir d'une référence doit supprimer les overlays de source (timestamp YouTube, icône play, watermark, logo tiers, texte incrusté).
-- Interdiction de conserver un timer vidéo (ex: `12:34` en bas à droite) sur le visuel final.
 - `npm run build` doit passer.
 
 ## 8) Données légales à injecter
@@ -102,8 +100,6 @@ Contraintes non négociables:
 - Toute page additionnelle liée doit exister et être remplie (sinon supprimer le lien)
 - Tout lien du même domaine doit être interne et dofollow
 - Les redirections legacy doivent utiliser des slugs décodés/normalisés (pas de `c3a9`, `c3a8`, etc.)
-- Si une image de référence contient un overlay (timestamp YouTube, icône play, watermark, logo tiers, texte incrusté), le rendu final doit l'enlever.
-- Les miniatures finales doivent être "clean" (aucun timer vidéo / badge de plateforme visible).
 - npm run build sans erreur
 
 Action attendue:

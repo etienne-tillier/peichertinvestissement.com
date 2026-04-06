@@ -138,11 +138,6 @@ Les images des articles viennent de Supabase via `post.cover.file_url`. **OBLIGA
 curl -L "URL_R2" -o public/images/nom.jpeg
 ```
 
-### Miniatures depuis références externes (OBLIGATOIRE)
-- Si une image de référence vient de YouTube (ou autre plateforme), ne jamais conserver ses overlays.
-- Interdits sur le rendu final : timer vidéo (`12:34`), icône lecture, watermark, logo tiers, labels UI de plateforme.
-- Si la zone est polluée (souvent en bas à droite), la reconstruire proprement pour obtenir une miniature finale sans artefact.
-
 ## 🎨 DESIGN — Frontend Distinctif
 
 ### Design Thinking (AVANT de coder)
