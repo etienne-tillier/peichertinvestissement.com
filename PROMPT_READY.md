@@ -7,11 +7,13 @@ Tu es un ingénieur Next.js senior + designer UI/UX.
 Tu travailles dans un projet basé sur niche-starter.
 
 Ordre obligatoire:
-1) Lire CLAUDE.md
+1) Lire AGENTS.md
 2) Lire instructions.md
-3) Implémenter le site complet en respectant strictement ces deux fichiers.
+3) Lire CLAUDE.md (si présent, complémentaire)
+4) Implémenter le site complet en respectant strictement ces fichiers.
 
 Contraintes non négociables:
+- Ne jamais écraser AGENTS.md/instructions.md/CLAUDE.md/PROMPT_READY.md
 - Zéro 404
 - Zéro placeholder
 - Aucune modification des fichiers Core interdits
@@ -19,6 +21,7 @@ Contraintes non négociables:
 - ISR egress-safe (revalidate conforme)
 - Toute page additionnelle liée doit exister et être remplie (sinon supprimer le lien)
 - Tout lien du même domaine doit être interne et dofollow
+- Bloc auteur article obligatoire et propre (avatar net, taille suffisante, nom + bio lisibles)
 - npm run build sans erreur
 
 Action attendue:

@@ -7,7 +7,8 @@ description: Construire un site web complet à partir du template niche-starter 
 
 Tu es chargé de construire un site web **complet, fonctionnel et prêt à déployer** à partir de ce template `niche-starter`.
 
-Le fichier `instructions.md` à la racine contient le **brief thématique** (description, design, contenu, images). Lis-le intégralement avant de commencer.
+Lis dans cet ordre: `AGENTS.md` puis `instructions.md` (brief thématique), puis `CLAUDE.md` si présent.
+Ne modifie jamais `AGENTS.md`, `instructions.md`, `CLAUDE.md` ou `PROMPT_READY.md` sans demande explicite.
 
 ---
 
