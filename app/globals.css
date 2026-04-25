@@ -40,4 +40,60 @@
     .text-gradient {
         @apply bg-gradient-to-r from-orange to-orange-dark bg-clip-text text-transparent;
     }
+
+    /* Article / Blog Post Styles */
+    .prose-article {
+        @apply text-gray-700 leading-relaxed;
+    }
+    .prose-article h2 {
+        @apply text-2xl font-bold text-dark mt-10 mb-4;
+    }
+    .prose-article h3 {
+        @apply text-xl font-semibold text-dark mt-8 mb-3;
+    }
+    .prose-article p {
+        @apply mb-6;
+    }
+    .prose-article ul, .prose-article ol {
+        @apply mb-6 pl-6;
+    }
+    .prose-article ul {
+        @apply list-disc;
+    }
+    .prose-article ol {
+        @apply list-decimal;
+    }
+    .prose-article li {
+        @apply mb-2;
+    }
+    .prose-article a {
+        @apply text-orange hover:text-orange-dark underline;
+    }
+    .prose-article blockquote {
+        @apply border-l-4 border-orange pl-6 italic text-gray-600 my-6;
+    }
+    .prose-article code {
+        @apply bg-gray-100 text-orange px-2 py-1 rounded text-sm font-mono;
+    }
+    .prose-article pre {
+        @apply bg-dark text-white p-4 rounded-lg overflow-x-auto my-6;
+    }
+    .prose-article pre code {
+        @apply bg-transparent text-white p-0;
+    }
+    .prose-article img {
+        @apply rounded-lg shadow-md my-8;
+    }
+    .prose-article hr {
+        @apply border-gray-200 my-10;
+    }
+    .prose-article table {
+        @apply w-full border-collapse my-6;
+    }
+    .prose-article th {
+        @apply bg-orange text-white px-4 py-2 text-left;
+    }
+    .prose-article td {
+        @apply border border-gray-200 px-4 py-2;
+    }
 }
