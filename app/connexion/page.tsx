@@ -22,9 +22,10 @@ export default function ConnexionPage() {
 
                 <div className="card">
                     <img
-                        src="https://images.unsplash.com/photo-1586880244406-556ebe35f282?w=800&q=80"
-                        alt="Connexion à la Messagerie Orange"
+                        src="/images/guides-hero.jpeg"
+                        alt="Connexion a la Messagerie Orange"
                         className="w-full rounded-lg mb-6 object-cover h-48"
+                        onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1586880244406-556ebe35f282?w=800&q=80'; }}
                     />
                     <div className="space-y-6">
                         <div>

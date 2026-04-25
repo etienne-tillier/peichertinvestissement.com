@@ -21,6 +21,12 @@ export default function ContactPage() {
                 </header>
 
                 <div className="card">
+                    <img
+                        src="/images/contact.jpeg"
+                        alt="Contact Messagerie Orange - Notre equipe"
+                        className="w-full rounded-lg mb-6 object-cover h-48"
+                        onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1596528021075-e1b3c0c3e9b9?w=800&q=80'; }}
+                    />
                     <div className="text-center py-8">
                         <div className="w-20 h-20 bg-orange/10 rounded-full flex items-center justify-center mx-auto mb-6">
                             <svg className="w-10 h-10 text-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24">

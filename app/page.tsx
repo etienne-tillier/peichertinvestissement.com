@@ -80,11 +80,48 @@ export default async function HomePage() {
             {/* Hero Image */}
             <div className="max-w-6xl mx-auto px-6 -mt-8 mb-12">
                 <img
-                    src="https://images.unsplash.com/photo-1557200134-90327ee9fafa?w=800&q=80"
+                    src="/images/hero.jpeg"
                     alt="Messagerie Orange - Consultation email"
                     className="w-full rounded-xl shadow-lg object-cover h-64 md:h-80"
+                    onError={(e) => { e.currentTarget.srcset = ''; e.currentTarget.src = 'https://images.unsplash.com/photo-1557200134-90327ee9fafa?w=800&q=80'; }}
                 />
             </div>
+
+            {/* Section Guides */}
+            <section className="py-12 bg-gradient-to-r from-orange/5 to-transparent">
+                <div className="max-w-6xl mx-auto px-6">
+                    <div className="grid md:grid-cols-2 gap-8 items-center">
+                        <img
+                            src="/images/guides.jpeg"
+                            alt="Configuration email Orange - Guides passo a passo"
+                            className="rounded-xl shadow-lg object-cover h-64 md:h-80 w-full"
+                            onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1563986768609-322da13575f3?w=800&q=80'; }}
+                        />
+                        <div>
+                            <h3 className="text-2xl font-bold mb-4">Guides de Configuration</h3>
+                            <p className="text-gray-600">Apprenez a configurer votre email Orange sur tous vos appareils avec nos guides detallhes.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Section Problemes */}
+            <section className="py-12">
+                <div className="max-w-6xl mx-auto px-6">
+                    <div className="grid md:grid-cols-2 gap-8 items-center">
+                        <div>
+                            <h3 className="text-2xl font-bold mb-4">Problemes Courants Resolus</h3>
+                            <p className="text-gray-600">Trouvez rapidement des solutions aux problemes les plus frequents : spam, blocage, stockage.</p>
+                        </div>
+                        <img
+                            src="/images/problemes.jpeg"
+                            alt="Resolution problemes messagerie Orange"
+                            className="rounded-xl shadow-lg object-cover h-64 md:h-80 w-full"
+                            onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1555952517-2e8e729e0b44?w=800&q=80'; }}
+                        />
+                    </div>
+                </div>
+            </section>
 
             {/* Introduction SEO Content */}
             <section className="py-16 bg-white">
