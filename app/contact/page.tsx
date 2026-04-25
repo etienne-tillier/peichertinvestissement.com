@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import ImageFallback from "@/components/ImageFallback";
 
 export const metadata: Metadata = {
     title: "Contact - Messagerie Orange",
@@ -21,11 +22,12 @@ export default function ContactPage() {
                 </header>
 
                 <div className="card">
-                    <img
+                    <ImageFallback
                         src="/images/contact.svg"
                         alt="Contact Messagerie Orange - Notre equipe"
+                        width={800}
+                        height={200}
                         className="w-full rounded-lg mb-6 object-cover h-48"
-                        onError={(e) => { e.currentTarget.style.display = 'none'; }}
                     />
                     <div className="text-center py-8">
                         <div className="w-20 h-20 bg-orange/10 rounded-full flex items-center justify-center mx-auto mb-6">

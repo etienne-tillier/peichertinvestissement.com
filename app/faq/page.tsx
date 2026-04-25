@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import ImageFallback from "@/components/ImageFallback";
 
 export const metadata: Metadata = {
     title: "FAQ - Questions Fréquentes sur la Messagerie Orange",
@@ -130,11 +131,12 @@ export default function FAQPage() {
         <main className="py-16">
             <div className="max-w-6xl mx-auto px-6">
                 {/* Hero Image */}
-                    <img
+                    <ImageFallback
                         src="/images/faq-hero.svg"
                         alt="FAQ Messagerie Orange - Questions et reponses"
+                        width={1200}
+                        height={300}
                         className="w-full rounded-xl shadow-lg object-cover h-64 md:h-80 mb-12"
-                        onError={(e) => { e.currentTarget.style.display = 'none'; }}
                     />
                 
                 <header className="text-center mb-12">

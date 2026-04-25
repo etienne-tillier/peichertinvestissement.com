@@ -1,4 +1,5 @@
 import Link from "next/link";
+import ImageFallback from "@/components/ImageFallback";
 import { getPublishedBlogPosts } from "@/lib/blog";
 
 export default async function HomePage() {
@@ -79,11 +80,12 @@ export default async function HomePage() {
 
             {/* Hero Image */}
             <div className="max-w-6xl mx-auto px-6 -mt-8 mb-12">
-                <img
+                <ImageFallback
                     src="/images/hero.svg"
                     alt="Messagerie Orange - Consultation email"
+                    width={1200}
+                    height={300}
                     className="w-full rounded-xl shadow-lg object-cover h-64 md:h-80"
-                    onError={(e) => { e.currentTarget.style.display = 'none'; }}
                 />
             </div>
 
@@ -91,11 +93,12 @@ export default async function HomePage() {
             <section className="py-12 bg-gradient-to-r from-orange/5 to-transparent">
                 <div className="max-w-6xl mx-auto px-6">
                     <div className="grid md:grid-cols-2 gap-8 items-center">
-                        <img
+                        <ImageFallback
                             src="/images/guides.svg"
                             alt="Configuration email Orange - Guides passo a passo"
+                            width={600}
+                            height={250}
                             className="rounded-xl shadow-lg object-cover h-64 md:h-80 w-full"
-                            onError={(e) => { e.currentTarget.style.display = 'none'; }}
                         />
                         <div>
                             <h3 className="text-2xl font-bold mb-4">Guides de Configuration</h3>
@@ -113,11 +116,12 @@ export default async function HomePage() {
                             <h3 className="text-2xl font-bold mb-4">Problemes Courants Resolus</h3>
                             <p className="text-gray-600">Trouvez rapidement des solutions aux problemes les plus frequents : spam, blocage, stockage.</p>
                         </div>
-                        <img
+                        <ImageFallback
                             src="/images/problemes.svg"
                             alt="Resolution problemes messagerie Orange"
+                            width={600}
+                            height={250}
                             className="rounded-xl shadow-lg object-cover h-64 md:h-80 w-full"
-                            onError={(e) => { e.currentTarget.style.display = 'none'; }}
                         />
                     </div>
                 </div>
