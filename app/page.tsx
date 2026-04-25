@@ -80,10 +80,10 @@ export default async function HomePage() {
             {/* Hero Image */}
             <div className="max-w-6xl mx-auto px-6 -mt-8 mb-12">
                 <img
-                    src="/images/hero.jpeg"
+                    src="/images/hero.svg"
                     alt="Messagerie Orange - Consultation email"
                     className="w-full rounded-xl shadow-lg object-cover h-64 md:h-80"
-                    onError={(e) => { e.currentTarget.srcset = ''; e.currentTarget.src = 'https://images.unsplash.com/photo-1557200134-90327ee9fafa?w=800&q=80'; }}
+                    onError={(e) => { e.currentTarget.style.display = 'none'; }}
                 />
             </div>
 
@@ -92,10 +92,10 @@ export default async function HomePage() {
                 <div className="max-w-6xl mx-auto px-6">
                     <div className="grid md:grid-cols-2 gap-8 items-center">
                         <img
-                            src="/images/guides.jpeg"
+                            src="/images/guides.svg"
                             alt="Configuration email Orange - Guides passo a passo"
                             className="rounded-xl shadow-lg object-cover h-64 md:h-80 w-full"
-                            onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1563986768609-322da13575f3?w=800&q=80'; }}
+                            onError={(e) => { e.currentTarget.style.display = 'none'; }}
                         />
                         <div>
                             <h3 className="text-2xl font-bold mb-4">Guides de Configuration</h3>
@@ -114,10 +114,10 @@ export default async function HomePage() {
                             <p className="text-gray-600">Trouvez rapidement des solutions aux problemes les plus frequents : spam, blocage, stockage.</p>
                         </div>
                         <img
-                            src="/images/problemes.jpeg"
+                            src="/images/problemes.svg"
                             alt="Resolution problemes messagerie Orange"
                             className="rounded-xl shadow-lg object-cover h-64 md:h-80 w-full"
-                            onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1555952517-2e8e729e0b44?w=800&q=80'; }}
+                            onError={(e) => { e.currentTarget.style.display = 'none'; }}
                         />
                     </div>
                 </div>

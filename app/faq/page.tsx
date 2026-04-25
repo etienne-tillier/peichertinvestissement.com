@@ -130,12 +130,12 @@ export default function FAQPage() {
         <main className="py-16">
             <div className="max-w-6xl mx-auto px-6">
                 {/* Hero Image */}
-                <img
-                    src="/images/faq-hero.jpeg"
-                    alt="FAQ Messagerie Orange - Questions et reponses"
-                    className="w-full rounded-xl shadow-lg object-cover h-64 md:h-80 mb-12"
-                    onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1551434678-e076c223a692?w=800&q=80'; }}
-                />
+                    <img
+                        src="/images/faq-hero.svg"
+                        alt="FAQ Messagerie Orange - Questions et reponses"
+                        className="w-full rounded-xl shadow-lg object-cover h-64 md:h-80 mb-12"
+                        onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                    />
                 
                 <header className="text-center mb-12">
                     <h1 className="text-4xl font-bold text-dark mb-4">

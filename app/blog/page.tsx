@@ -27,10 +27,10 @@ export default async function BlogPage() {
                 {posts.length === 0 ? (
                     <div className="card text-center py-16">
                         <img
-                            src="/images/faq-section.jpeg"
+                            src="/images/faq-section.svg"
                             alt="Blog Messagerie Orange - Articles a venir"
                             className="w-full rounded-lg mb-6 object-cover h-48"
-                            onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=800&q=80'; }}
+                            onError={(e) => { e.currentTarget.style.display = 'none'; }}
                         />
                         <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
                             <svg className="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -12,10 +12,10 @@ export default function MentionsLegalesPage() {
                 <h1 className="text-4xl font-bold text-dark mb-8">Mentions Légales</h1>
                 <div className="card">
                     <img
-                        src="/images/hero.jpeg"
+                        src="/images/hero.svg"
                         alt="Mentions legales Messagerie Orange"
                         className="w-full rounded-lg mb-6 object-cover h-48"
-                        onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=800&q=80'; }}
+                        onError={(e) => { e.currentTarget.style.display = 'none'; }}
                     />
                     <div className="space-y-6 text-gray-700">
                     <section>
