@@ -23,7 +23,7 @@ export default function ConnexionPage() {
 
                 <div className="card">
                     <ImageFallback
-                        src="/images/guides-hero.svg"
+                        src="/images/guides-hero.jpeg"
                         alt="Connexion a la Messagerie Orange"
                         width={800}
                         height={200}

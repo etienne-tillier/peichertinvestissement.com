@@ -13,7 +13,7 @@ export default function MentionsLegalesPage() {
                 <h1 className="text-4xl font-bold text-dark mb-8">Mentions Légales</h1>
                 <div className="card">
                     <ImageFallback
-                        src="/images/hero.svg"
+                        src="/images/hero.jpeg"
                         alt="Mentions legales Messagerie Orange"
                         width={800}
                         height={200}

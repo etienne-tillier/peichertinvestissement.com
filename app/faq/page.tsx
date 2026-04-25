@@ -132,7 +132,7 @@ export default function FAQPage() {
             <div className="max-w-6xl mx-auto px-6">
                 {/* Hero Image */}
                     <ImageFallback
-                        src="/images/faq-hero.svg"
+                        src="/images/faq-hero.jpeg"
                         alt="FAQ Messagerie Orange - Questions et reponses"
                         width={1200}
                         height={300}

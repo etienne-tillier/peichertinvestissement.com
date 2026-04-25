@@ -81,7 +81,7 @@ export default async function HomePage() {
             {/* Hero Image */}
             <div className="max-w-6xl mx-auto px-6 -mt-8 mb-12">
                 <ImageFallback
-                    src="/images/hero.svg"
+                    src="/images/hero.jpeg"
                     alt="Messagerie Orange - Consultation email"
                     width={1200}
                     height={300}
@@ -94,7 +94,7 @@ export default async function HomePage() {
                 <div className="max-w-6xl mx-auto px-6">
                     <div className="grid md:grid-cols-2 gap-8 items-center">
                         <ImageFallback
-                            src="/images/guides.svg"
+                            src="/images/guides.jpeg"
                             alt="Configuration email Orange - Guides passo a passo"
                             width={600}
                             height={250}
@@ -117,7 +117,7 @@ export default async function HomePage() {
                             <p className="text-gray-600">Trouvez rapidement des solutions aux problemes les plus frequents : spam, blocage, stockage.</p>
                         </div>
                         <ImageFallback
-                            src="/images/problemes.svg"
+                            src="/images/problemes.jpeg"
                             alt="Resolution problemes messagerie Orange"
                             width={600}
                             height={250}

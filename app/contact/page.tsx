@@ -23,7 +23,7 @@ export default function ContactPage() {
 
                 <div className="card">
                     <ImageFallback
-                        src="/images/contact.svg"
+                        src="/images/contact.jpeg"
                         alt="Contact Messagerie Orange - Notre equipe"
                         width={800}
                         height={200}

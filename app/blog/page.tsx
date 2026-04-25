@@ -28,7 +28,7 @@ export default async function BlogPage() {
                 {posts.length === 0 ? (
                     <div className="card text-center py-16">
                         <ImageFallback
-                            src="/images/faq-section.svg"
+                            src="/images/faq-section.jpeg"
                             alt="Blog Messagerie Orange - Articles a venir"
                             width={800}
                             height={200}
