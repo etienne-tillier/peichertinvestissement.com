@@ -1,49 +1,40 @@
-import Link from "next/link";
+import { Metadata } from "next";
+import Navigation from "@/components/Navigation";
+import Footer from "@/components/Footer";
 
-import { getBlogPostsByCategory, getCategoryInfo } from "@/lib/blog";
-
-type CategoryPageProps = {
-  params: Promise<{ slug: string }>;
+export const metadata: Metadata = {
+    title: "Blog - Catégorie | Peichert Investissement",
+    description: "Articles sur l'investissement dans la catégorie sélectionnée.",
+    alternates: {
+        canonical: "/blog/categorie/[slug]",
+    },
 };
 
-export default async function BlogCategoryPage({ params }: CategoryPageProps) {
-  const { slug } = await params;
-  const [posts, category] = await Promise.all([
-    getBlogPostsByCategory(slug, 24, 0),
-    getCategoryInfo(slug),
-  ]);
-
-  return (
-    <main className="mx-auto max-w-5xl px-6 py-12">
-      <header className="mb-8">
-        <Link href="/blog" className="text-sm text-slate-600 hover:underline">
-          Retour au blog
-        </Link>
-        <h1 className="mt-3 text-3xl font-semibold tracking-tight text-slate-900">
-          {category?.label || slug}
-        </h1>
-      </header>
-
-      {posts.length === 0 ? (
-        <div className="rounded-lg border border-slate-200 bg-white p-6 text-slate-600">
-          Aucun article dans cette catégorie.
-        </div>
-      ) : (
-        <ul className="space-y-4">
-          {posts.map((post) => (
-            <li key={post.id} className="rounded-lg border border-slate-200 bg-white p-5">
-              <h2 className="text-lg font-semibold text-slate-900">
-                <Link href={`/blog/${post.slug}`} className="hover:underline">
-                  {post.h1 || post.seo_title || post.slug}
-                </Link>
-              </h2>
-              {post.meta_description ? (
-                <p className="mt-2 text-slate-600">{post.meta_description}</p>
-              ) : null}
-            </li>
-          ))}
-        </ul>
-      )}
-    </main>
-  );
+export default function CategoriePage() {
+    return (
+        <>
+            <Navigation />
+            <main>
+                <section className="hero-section py-16">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <h1 className="text-4xl md:text-5xl font-display font-bold mb-6 text-white">
+                            Blog - <span className="text-gold">Catégorie</span>
+                        </h1>
+                        <p className="text-xl text-white/80 max-w-3xl">
+                            Explorez nos articles sur l&apos;investissement dans cette catégorie.
+                        </p>
+                    </div>
+                </section>
+                <section className="py-16 bg-white">
+                    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                        <p className="text-gray-600">
+                            Cette page affiche les articles d&apos;une catégorie spécifique. 
+                            Utilisez le blog principal pour explorer tous nos articles.
+                        </p>
+                    </div>
+                </section>
+            </main>
+            <Footer />
+        </>
+    );
 }

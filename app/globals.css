@@ -1,44 +1,61 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-    --orange: #FF6600;
-    --orange-light: #FF8533;
-    --orange-dark: #E65A00;
-    --dark: #1A1A1A;
-    --dark-light: #2D2D2D;
+    --navy: #1a365d;
+    --navy-light: #2c5282;
+    --navy-dark: #1a202c;
+    --gold: #d4a843;
+    --gold-light: #e4b856;
+    --gold-dark: #b8922f;
+    --emerald: #047857;
+    --emerald-light: #059669;
+    --emerald-dark: #065f46;
+    --charcoal: #2d3748;
+    --charcoal-light: #4a5568;
+    --cream: #f8f9fa;
+    --cream-dark: #e9ecef;
 }
 
 @layer base {
     body {
-        @apply bg-white text-dark antialiased;
+        @apply bg-cream text-charcoal antialiased;
     }
     a {
-        @apply text-orange hover:text-orange-dark transition-colors;
+        @apply text-navy hover:text-gold transition-colors;
     }
     h1, h2, h3, h4, h5, h6 {
-        @apply text-dark;
+        @apply text-navy font-display;
     }
 }
 
 @layer components {
     .btn-primary {
-        @apply bg-orange text-white px-6 py-3 rounded-lg font-medium 
-               hover:bg-orange-dark transition-colors inline-block;
+        @apply bg-gold text-white px-6 py-3 rounded-lg font-medium 
+               hover:bg-gold-dark transition-colors inline-block;
     }
     .btn-secondary {
-        @apply border-2 border-orange text-orange px-6 py-3 rounded-lg font-medium 
-               hover:bg-orange hover:text-white transition-colors inline-block;
+        @apply border-2 border-navy text-navy px-6 py-3 rounded-lg font-medium 
+               hover:bg-navy hover:text-white transition-colors inline-block;
+    }
+    .btn-emerald {
+        @apply bg-emerald text-white px-6 py-3 rounded-lg font-medium 
+               hover:bg-emerald-dark transition-colors inline-block;
     }
     .card {
         @apply bg-white rounded-xl shadow-md border border-gray-100 p-6;
     }
     .section-title {
-        @apply text-2xl md:text-3xl font-bold text-dark mb-6;
+        @apply text-2xl md:text-3xl font-bold text-navy mb-6 font-display;
     }
     .text-gradient {
-        @apply bg-gradient-to-r from-orange to-orange-dark bg-clip-text text-transparent;
+        @apply bg-gradient-to-r from-navy to-gold bg-clip-text text-transparent;
+    }
+    .hero-section {
+        @apply bg-gradient-to-br from-navy via-navy-light to-navy-dark py-20 text-white;
     }
 
     /* Article / Blog Post Styles */
@@ -46,10 +63,10 @@
         @apply text-gray-700 leading-relaxed;
     }
     .prose-article h2 {
-        @apply text-2xl font-bold text-dark mt-10 mb-4;
+        @apply text-2xl font-bold text-navy mt-10 mb-4 font-display;
     }
     .prose-article h3 {
-        @apply text-xl font-semibold text-dark mt-8 mb-3;
+        @apply text-xl font-semibold text-navy mt-8 mb-3;
     }
     .prose-article p {
         @apply mb-6;
@@ -67,16 +84,16 @@
         @apply mb-2;
     }
     .prose-article a {
-        @apply text-orange hover:text-orange-dark underline;
+        @apply text-navy hover:text-gold underline;
     }
     .prose-article blockquote {
-        @apply border-l-4 border-orange pl-6 italic text-gray-600 my-6;
+        @apply border-l-4 border-gold pl-6 italic text-gray-600 my-6;
     }
     .prose-article code {
-        @apply bg-gray-100 text-orange px-2 py-1 rounded text-sm font-mono;
+        @apply bg-gray-100 text-navy px-2 py-1 rounded text-sm font-mono;
     }
     .prose-article pre {
-        @apply bg-dark text-white p-4 rounded-lg overflow-x-auto my-6;
+        @apply bg-navy text-white p-4 rounded-lg overflow-x-auto my-6;
     }
     .prose-article pre code {
         @apply bg-transparent text-white p-0;
@@ -91,9 +108,20 @@
         @apply w-full border-collapse my-6;
     }
     .prose-article th {
-        @apply bg-orange text-white px-4 py-2 text-left;
+        @apply bg-navy text-white px-4 py-2 text-left;
     }
     .prose-article td {
         @apply border border-gray-200 px-4 py-2;
+    }
+
+    /* Navigation */
+    .nav-link {
+        @apply text-white/90 hover:text-gold transition-colors font-medium;
+    }
+    .nav-dropdown {
+        @apply absolute left-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-100 py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50;
+    }
+    .nav-dropdown-item {
+        @apply block px-4 py-2 text-charcoal hover:bg-cream hover:text-navy transition-colors;
     }
 }

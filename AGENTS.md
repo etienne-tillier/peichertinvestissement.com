@@ -15,6 +15,7 @@ Ce fichier définit les règles de travail pour n'importe quel agent IA (Claude,
 - Zéro 404.
 - Zéro placeholder.
 - Blog 100% Supabase (aucun faux article).
+- Homepage sections articles = MASQUER si vide.
 - Toute page liée doit exister réellement, sinon supprimer le lien.
 - Tout lien vers le même domaine doit être interne dofollow.
 - Respect strict des contraintes SEO/egress du projet.
@@ -22,11 +23,11 @@ Ce fichier définit les règles de travail pour n'importe quel agent IA (Claude,
 
 ## Contexte repo
 
-- Domaine: messagerieorange.fr
-- Repository: messagerieorange.fr
+- Domaine: peichertinvestissement.com
+- Repository: peichertinvestissement.com
 
 ## Sortie attendue de l'agent
 
-- Implémentation complète, propre, cohérente avec la thématique.
+- Implémentation complète, propre, cohérente avec la thématique finance/investissement.
 - Liste des fichiers modifiés.
 - Résumé court des choix design et SEO.

@@ -1,40 +1,49 @@
 import type { Metadata } from "next";
-import ImageFallback from "@/components/ImageFallback";
+import Navigation from "@/components/Navigation";
+import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
-    title: "Mentions Légales - Messagerie Orange",
-    description: "Mentions légales du site Messagerie Orange. Informations sur l'éditeur, l'hébergeur et les conditions d'utilisation.",
+    title: "Mentions Légales | Peichert Investissement",
+    description: "Mentions légales du site Peichert Investissement. Informations sur l'éditeur et les conditions d'utilisation.",
 };
 
 export default function MentionsLegalesPage() {
     return (
-        <main className="py-16">
-            <div className="max-w-4xl mx-auto px-6">
-                <h1 className="text-4xl font-bold text-dark mb-8">Mentions Légales</h1>
-                <div className="card">
-                    <ImageFallback
-                        src="/images/hero.jpeg"
-                        alt="Mentions legales Messagerie Orange"
-                        width={800}
-                        height={200}
-                        className="w-full rounded-lg mb-6 object-cover h-48"
-                    />
-                    <div className="space-y-6 text-gray-700">
-                    <section>
-                        <h2 className="text-xl font-bold text-dark mb-3">Éditeur du site</h2>
-                        <p>Le site Messagerie Orange est un site d'information indépendant dédié aux conseils et astuces pour la messagerie Orange.</p>
-                    </section>
-                    <section>
-                        <h2 className="text-xl font-bold text-dark mb-3">Propriété intellectuelle</h2>
-                        <p>L'ensemble du contenu présent sur ce site est protégé par le droit d'auteur. Toute reproduction, même partielle, est interdite sans autorisation préalable.</p>
-                    </section>
-                    <section>
-                        <h2 className="text-xl font-bold text-dark mb-3">Contact</h2>
-                        <p>Pour toute question, contactez-nous à : <a href="mailto:contact@messagerieorange.fr" className="text-orange hover:underline">contact@messagerieorange.fr</a></p>
-                    </section>
+        <>
+            <Navigation />
+            <main>
+                <section className="hero-section py-16">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <h1 className="text-4xl md:text-5xl font-display font-bold mb-6 text-white">
+                            Mentions <span className="text-gold">Légales</span>
+                        </h1>
                     </div>
-                </div>
-            </div>
-        </main>
+                </section>
+
+                <section className="py-16 bg-white">
+                    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div className="card space-y-8 text-gray-700">
+                            <section>
+                                <h2 className="text-xl font-display font-bold text-navy mb-3">Éditeur du site</h2>
+                                <p>Peichert Investissement est un site d&apos;information indépendant dédié aux conseils en investissement et planification financière.</p>
+                            </section>
+                            <section>
+                                <h2 className="text-xl font-display font-bold text-navy mb-3">Propriété intellectuelle</h2>
+                                <p>L&apos;ensemble du contenu présent sur ce site est protégé par le droit d&apos;auteur. Toute reproduction, même partielle, est interdite sans autorisation préalable.</p>
+                            </section>
+                            <section>
+                                <h2 className="text-xl font-display font-bold text-navy mb-3">Avertissement</h2>
+                                <p>Les informations contenues sur ce site sont fournies à titre informatif uniquement et ne constituent pas un conseil financier personnalisé. Investir comporte des risques, y compris la perte potentielle du capital investi. Consultez un conseiller financier qualifié avant toute décision d&apos;investissement.</p>
+                            </section>
+                            <section>
+                                <h2 className="text-xl font-display font-bold text-navy mb-3">Contact</h2>
+                                <p>Pour toute question : <a href="mailto:contact@peichertinvestissement.com" className="text-navy hover:text-gold hover:underline">contact@peichertinvestissement.com</a></p>
+                            </section>
+                        </div>
+                    </div>
+                </section>
+            </main>
+            <Footer />
+        </>
     );
 }
