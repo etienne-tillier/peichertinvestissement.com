@@ -2,4 +2,42 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Design system — L'agent IA ajoute ses CSS variables ici */
+:root {
+    --orange: #FF6600;
+    --orange-light: #FF8533;
+    --orange-dark: #E65A00;
+    --dark: #1A1A1A;
+    --dark-light: #2D2D2D;
+}
+
+@layer base {
+    body {
+        @apply bg-white text-dark antialiased;
+    }
+    a {
+        @apply text-orange hover:text-orange-dark transition-colors;
+    }
+    h1, h2, h3, h4, h5, h6 {
+        @apply text-dark;
+    }
+}
+
+@layer components {
+    .btn-primary {
+        @apply bg-orange text-white px-6 py-3 rounded-lg font-medium 
+               hover:bg-orange-dark transition-colors inline-block;
+    }
+    .btn-secondary {
+        @apply border-2 border-orange text-orange px-6 py-3 rounded-lg font-medium 
+               hover:bg-orange hover:text-white transition-colors inline-block;
+    }
+    .card {
+        @apply bg-white rounded-xl shadow-md border border-gray-100 p-6;
+    }
+    .section-title {
+        @apply text-2xl md:text-3xl font-bold text-dark mb-6;
+    }
+    .text-gradient {
+        @apply bg-gradient-to-r from-orange to-orange-dark bg-clip-text text-transparent;
+    }
+}
