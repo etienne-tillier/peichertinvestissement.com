@@ -1,6 +1,6 @@
 # AGENTS.md
 
-Règles communes pour tout agent IA (Claude, Gemini, Codex, etc.) travaillant dans ce repo.
+Ce fichier définit les règles de travail pour n'importe quel agent IA (Claude, Gemini, Codex, etc.).
 
 ## Ordre de lecture obligatoire
 
@@ -11,17 +11,22 @@ Règles communes pour tout agent IA (Claude, Gemini, Codex, etc.) travaillant da
 ## Règles non négociables
 
 - Ne jamais écraser `instructions.md` avec un contenu template.
-- Ne jamais modifier `AGENTS.md`, `instructions.md`, `CLAUDE.md`, `PROMPT_READY.md` sans demande explicite.
-- Zéro page 404.
+- Ne jamais modifier `AGENTS.md`, `instructions.md`, `CLAUDE.md` ou `PROMPT_READY.md` sans demande explicite.
+- Zéro 404.
 - Zéro placeholder.
 - Blog 100% Supabase (aucun faux article).
 - Toute page liée doit exister réellement, sinon supprimer le lien.
 - Tout lien vers le même domaine doit être interne dofollow.
-- Respect des contraintes SEO/egress définies dans `instructions.md` et `CLAUDE.md`.
+- Respect strict des contraintes SEO/egress du projet.
 - `npm run build` doit passer.
 
-## Sortie attendue
+## Contexte repo
 
-- Implémentation complète et cohérente avec la thématique.
+- Domaine: messagerieorange.fr
+- Repository: messagerieorange.fr
+
+## Sortie attendue de l'agent
+
+- Implémentation complète, propre, cohérente avec la thématique.
 - Liste des fichiers modifiés.
-- Résumé court des choix design/SEO.
+- Résumé court des choix design et SEO.
