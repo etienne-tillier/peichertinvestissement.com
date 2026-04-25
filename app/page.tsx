@@ -11,7 +11,7 @@ export default async function HomePage() {
             <section className="bg-gradient-to-br from-dark via-dark to-dark-light py-20 text-white">
                 <div className="max-w-6xl mx-auto px-6">
                     <div className="max-w-3xl">
-                        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+                        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight text-white">
                             Messagerie Orange : Guide Complet pour Gérer Votre Email Orange
                         </h1>
                         <p className="text-xl text-gray-300 mb-8 leading-relaxed">
