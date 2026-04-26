@@ -2,4 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Design system — L'agent IA ajoute ses CSS variables ici */
+:root {
+  --navy-900: #0f1f3d;
+  --navy-800: #162c55;
+  --amber-500: #f59e0b;
+  --amber-400: #fbbf24;
+}
+
+@layer base {
+  html { scroll-behavior: smooth; }
+  body { @apply bg-white text-slate-800 antialiased; }
+}
