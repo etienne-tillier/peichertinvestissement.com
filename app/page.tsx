@@ -4,17 +4,12 @@ import { getPublishedBlogPosts } from "@/lib/blog";
 
 export const revalidate = 21600;
 
-// Pipeline-generated image (blog_assets R2)
-const HERO_IMAGE =
-  "https://pub-04ceb20f6a914fb588a8026b02652d02.r2.dev/peichertinvestissement.com-comment-investir-son-argent.webp";
-
-// Section images — finance-themed Unsplash (whitelisted in next.config.ts)
-const STRATEGIES_IMAGE =
-  "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=1200&q=80";
-const ASSETS_IMAGE =
-  "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=1200&q=80";
-const EXPERTISE_IMAGE =
-  "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=1200&q=80";
+// Pre-generated R2 images (from prompt_md pipeline)
+const BASE_R2 = "https://pub-3c1bead77fc84e5d93e229fe1a5fb51f.r2.dev/peichertinvestissement-com";
+const HERO_IMAGE       = `${BASE_R2}-home-hero-financial-success.jpeg`;
+const STRATEGIES_IMAGE = `${BASE_R2}-home-strategies-age-planning.jpeg`;
+const ASSETS_IMAGE     = `${BASE_R2}-home-assets-diversification.jpeg`;
+const EXPERTISE_IMAGE  = `${BASE_R2}-home-expertise-advisor.jpeg`;
 
 export default async function HomePage() {
   const posts = await getPublishedBlogPosts(3, 0);
