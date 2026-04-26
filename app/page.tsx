@@ -17,7 +17,7 @@ export default async function HomePage() {
   return (
     <main>
       {/* ── Hero ─────────────────────────────────────────────────────── */}
-      <section className="relative bg-navy-900 overflow-hidden">
+      <section className="relative bg-[#0f1f3d] overflow-hidden">
         <div className="absolute inset-0">
           <Image
             src={HERO_IMAGE}
@@ -398,7 +398,7 @@ export default async function HomePage() {
       )}
 
       {/* ── CTA ──────────────────────────────────────────────────────── */}
-      <section className="py-20 bg-navy-900 bg-slate-900">
+      <section className="py-20 bg-[#0f1f3d]">
         <div className="max-w-4xl mx-auto px-6 text-center">
           <h2 className="text-3xl font-bold text-white">
             Prêt à Optimiser vos Investissements ?

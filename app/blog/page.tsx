@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { getPublishedBlogPosts } from "@/lib/blog";
 
+export const revalidate = 0;
+
 export default async function BlogPage() {
   const posts = await getPublishedBlogPosts(24, 0);
 
